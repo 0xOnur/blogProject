@@ -1,0 +1,15 @@
+.root_table{
+    width: 100%;
+}
+
+.menuButton{
+    margin-right: 2px;
+}
+
+.title{
+    flex-grow: 1px;
+}
+
+.container {
+    margin-top: 3px;
+}
