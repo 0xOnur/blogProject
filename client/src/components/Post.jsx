@@ -16,12 +16,13 @@ const Post = ({post}) => {
       <div className='m-5' >
         <Card style={{ width: '20rem'}} className="bg-dark text-white">
           <Card.Img style={{opacity:'0.6'}} variant="top" src={post.image || noImage} />
-          <Card.ImgOverlay style={{position:'relative'}}>
-            <Card.Text>{convertTime(post.created)}</Card.Text>
-            <Card.Text>Yazar: Onur</Card.Text>
-          </Card.ImgOverlay>
+            
           <Card.Body>
+          <Card.Text>{convertTime(post.created)}</Card.Text>
+            <Card.Text>Yazar: Onur</Card.Text>
+            <Card.Text>#{post.tag}</Card.Text>
             <Card.Title>{post.title}</Card.Title>
+            <br />
             <Card.Subtitle>{post.subTitle}</Card.Subtitle>
             <br />
             <Card.Text>
@@ -29,9 +30,6 @@ const Post = ({post}) => {
             </Card.Text>
             <Button variant="primary"><Link style={{color:"white", textDecoration:"none"}} to={`/posts/${post._id}`}>Daha fazla..</Link></Button>
           </Card.Body>
-          <ListGroup className="list-group-flush ">
-            <ListGroup.Item>#{post.tag}</ListGroup.Item>
-          </ListGroup>
         </Card>
       </div>
     </Col>

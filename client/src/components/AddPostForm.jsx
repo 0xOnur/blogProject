@@ -8,7 +8,6 @@ import {
   Button,
   InputGroup,
 } from "react-bootstrap";
-import NAV from './Navbar';
 import {createPost} from '../actions/post';
 
 const tags = ["Fun", "Programming", "Health", "Science","Teknoloji"];
@@ -42,7 +41,6 @@ const AddPostForm = () => {
 
   return (
     <>
-    <NAV />
     <Container className="mt-5">
         <Form onSubmit={onSubmit}>
           <Form.Group className="mb-3" controlId="formTitle">
