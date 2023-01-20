@@ -2,6 +2,7 @@ import * as types from '../actions/types';
 
 const initialState = {
     posts: [],
+    currentPost: null
 };
 
 const postReducer = (state = initialState, action) => {
@@ -9,13 +10,30 @@ const postReducer = (state = initialState, action) => {
         case types.FETCH_POSTS:
             return {
                 ...state,
-                posts: action.payload
+                posts: action.payload,
             };
         case types.CREATE_POST:
             return{
                 ...state,
-                posts: [...state.posts, action.payload]
-            }
+                posts: [...state.posts, action.payload],
+            };
+        case types.FETCH_SINGLE_POST:
+            return{
+                ...state,
+                currentPost: action.payload,
+            };
+        case types.DELETE_POST:
+            return{
+                ...state,
+                posts: state.posts.filter((post) => post._id !== action.payload),
+                currentPost: null,
+            };
+        case types.UPDATE_POST:
+            return{
+                ...state,
+                posts: state.posts.map((post) => post._id === action.payload._id ? action.payload : post),
+                currentPost: action.payload,
+            };
         default:
             return {
                 ...state,

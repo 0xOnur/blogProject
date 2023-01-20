@@ -6,8 +6,9 @@ const postSchema = mongoose.Schema({
     content: String,
     tag: String,
     image: String,
-    creator: String,
-},
+    creator: {type: String, default: "Admin"},
+    },
+
 { 
     timestamps: {createdAt: 'created', updatedAt: 'updated'} 
 });

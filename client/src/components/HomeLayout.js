@@ -5,7 +5,7 @@ import NAV from './Navbar';
 const HomeLayout = () => {
   return (
     <>
-        <NAV isActive={'home'}/>
+        <NAV/>
         <Outlet />
     </>
   )

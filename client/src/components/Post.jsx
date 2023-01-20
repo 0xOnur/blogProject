@@ -1,5 +1,5 @@
 import React from 'react'
-import {Card, Button, ListGroup, Col} from 'react-bootstrap';
+import {Card, Button, Col} from 'react-bootstrap';
 import moment from 'moment'
 import {Link} from 'react-router-dom';
 import noImage from '../images/noimage.svg';
@@ -12,14 +12,11 @@ const Post = ({post}) => {
 
   return (
     <>
-    <Col md='auto' >
-      <div className='m-5' >
-        <Card style={{ width: '20rem'}} className="bg-dark text-white">
+        <Card style={{ width: '20rem'}} className="bg-dark text-white postCard">
           <Card.Img style={{opacity:'0.6'}} variant="top" src={post.image || noImage} />
-            
           <Card.Body>
           <Card.Text>{convertTime(post.created)}</Card.Text>
-            <Card.Text>Yazar: Onur</Card.Text>
+            <Card.Text>Yazar: {post.creator}</Card.Text>
             <Card.Text>#{post.tag}</Card.Text>
             <Card.Title>{post.title}</Card.Title>
             <br />
@@ -31,8 +28,6 @@ const Post = ({post}) => {
             <Button variant="primary"><Link style={{color:"white", textDecoration:"none"}} to={`/posts/${post._id}`}>Daha fazla..</Link></Button>
           </Card.Body>
         </Card>
-      </div>
-    </Col>
     </>
   )
 }

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {useNavigate} from "react-router-dom";
 import { useDispatch } from "react-redux";
 import FileBase64 from 'react-file-base64';
@@ -32,6 +32,15 @@ const AddPostForm = () => {
     })
   }
 
+  useEffect(() => {
+    setPostData((prev)=> {
+        return{
+          ...prev,
+          image:image,
+        }
+      })
+}, [image]);
+
   const onSubmit = (event)=> {
     dispatch(createPost(postData)).then(() => {
       console.log("Post created");
@@ -50,7 +59,7 @@ const AddPostForm = () => {
 
           <Form.Group className="mb-3" controlId="formSubTitle">
             <Form.Label>Alt Başlık</Form.Label>
-            <Form.Control onChange={handleChange} name="subTitle" type="text" required placeholder="Alt Başlık" />
+            <Form.Control onChange={handleChange} name="subTitle" type="text" placeholder="Alt Başlık" />
           </Form.Group>
 
           <Form.Group className="mb-3">

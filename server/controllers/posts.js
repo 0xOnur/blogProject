@@ -9,12 +9,43 @@ export const getPosts = async (req, res) => {
     }
 }
 
+export const getSinglePost = async (req, res) => {
+    try {
+        const {id : _id} = req.params;
+        const posts = await Post.findById(_id);
+        res.status(200).json(posts);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
+
 export const createPost = async (req, res) => {
     const post = req.body;
     const newPost = new Post(post);
     try {
         await newPost.save();
         res.status(201).json(newPost);
+    } catch (error) {
+        res.status(409).json({ message: error.message });
+    }
+}
+
+export const updatePost = async (req, res) => {
+    const {id : _id} = req.params;
+    const post = req.body;
+    try {
+        const updatedPost = await Post.findByIdAndUpdate(_id, post, {new: true})
+        res.json(updatedPost);
+    } catch (error) {
+        res.status(409).json({ message: error.message });
+    }
+}
+
+export const deletePost = async (req, res) => {
+    try {
+        const {id : _id} = req.params;
+        const deletedPost = await Post.findByIdAndDelete(_id);
+        res.json(deletedPost);
     } catch (error) {
         res.status(409).json({ message: error.message });
     }

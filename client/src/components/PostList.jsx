@@ -1,33 +1,29 @@
 import React, {useEffect} from 'react';
-import { useDispatch } from 'react-redux';
-import {fetchPosts} from '../actions/post';
 import {useSelector} from 'react-redux';
 import Post from './Post';
-import { Row } from 'react-bootstrap';
-import gridFour from '../images/grid_four.svg';
-import gridThree from '../images/grid_three.svg';
-
+import { Row,Col } from 'react-bootstrap';
 
 
 const PostList = () => {
-  const dispatch = useDispatch();
-  const posts = useSelector((state) => state.post.posts);
+  const posts = useSelector((state) => state?.post?.posts);
 
   useEffect(() => {
-    dispatch(fetchPosts());
-    document.title = "Post List";
-  }, [dispatch])
-
+    console.log(posts);
+  }, [posts]);
 
   return (
     <>
-      <div className='container' style={{display:'flex', padding:'0px'}}>
+      
+
+      <div className='container pb-5'>
       <Row>
-        {posts.length > 0 && posts.map(post => <Post key={post?._id} post={post} /> )}
-        </Row>
+        {posts?.length > 0 && posts?.map(post => 
+          <Col className='mb-5 mt-5' sm='12' md='6' xl='4'> 
+            <Post key={post?._id} post={post} />
+          </Col> )}
+      </Row>
       </div>
     </>
-    
   )
 }
 
