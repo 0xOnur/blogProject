@@ -8,7 +8,7 @@ import {
   Button,
   InputGroup,
 } from "react-bootstrap";
-import {createPost} from '../actions/post';
+import {createPost} from '../api/index';
 
 const tags = ["Fun", "Programming", "Health", "Science","Teknoloji"];
 

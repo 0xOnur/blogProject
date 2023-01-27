@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 import {useNavigate} from "react-router-dom";
 import { useDispatch } from "react-redux";
 import FileBase64 from 'react-file-base64';
-import {updatePost} from '../actions/post';
+import {updatePost} from '../api/index';
 import {
     Container,
     Form,
@@ -10,46 +10,36 @@ import {
     InputGroup,
   } from "react-bootstrap";
 
+const tags = ["Fun", "Programming", "Health", "Science","Teknoloji"];
+
+
 const EditPost = ({post, closeEditMode}) => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const [postData, setPostData] = useState(post);
-    const [image, setImage] = useState();
-
-    const tags = ["Fun", "Programming", "Health", "Science","Teknoloji"];
 
     const handleChange = (event) => {
         const { name, value } = event.target;
         setPostData((prev)=> {
           return{
             ...prev,
-            image:image,
             [name]: value,
           }
         })
     }
 
-    useEffect(() => {
-        setPostData((prev)=> {
-            return{
-              ...prev,
-              image:image ? image : post.image,
-            }
-          })
-    }, [image, post.image]);
-
     const onSubmit = (event) => {
         event.preventDefault();
-        dispatch(updatePost(post._id, postData)).then(() => {
+        dispatch(updatePost({id:post._id, postData})).then(() => {
             console.log("Post updated");
-            setImage(null);
             setPostData(null);
             closeEditMode();
             navigate(`/posts/${post._id}`);
         })
     }
+    console.log(postData);
 
     console.log("editPost render edildi");
     return (
@@ -85,7 +75,14 @@ const EditPost = ({post, closeEditMode}) => {
                 <Form.Group controlId="formFile" className="mb-3">
                     <Form.Label>Blog Kapak Fotoğrafı</Form.Label>
                     <br />
-                    <FileBase64 multiple={false} onDone={({base64}) => setImage(base64)} />
+                    <FileBase64 multiple={false} onDone={({base64}) => setPostData(
+                        (prev)=> {
+                            return{
+                                ...prev,
+                                image:base64,
+                            }
+                        }
+                    )} />
                 </Form.Group>
 
                 <Button onClick={closeEditMode} variant="primary" className="mt-3">

@@ -1,5 +1,5 @@
 import React from 'react'
-import {Card, Button, Col} from 'react-bootstrap';
+import {Card, Button} from 'react-bootstrap';
 import moment from 'moment'
 import {Link} from 'react-router-dom';
 import noImage from '../images/noimage.svg';

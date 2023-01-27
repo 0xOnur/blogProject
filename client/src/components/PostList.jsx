@@ -13,12 +13,10 @@ const PostList = () => {
 
   return (
     <>
-      
-
       <div className='container pb-5'>
       <Row>
         {posts?.length > 0 && posts?.map(post => 
-          <Col className='mb-5 mt-5' sm='12' md='6' xl='4'> 
+          <Col key={post?._id} className='mb-5 mt-5' sm='12' md='6' xl='4'> 
             <Post key={post?._id} post={post} />
           </Col> )}
       </Row>

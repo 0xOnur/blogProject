@@ -8,7 +8,7 @@ const postRoutes = express.Router();
 postRoutes.get("/", getPosts);
 postRoutes.get("/:id", getSinglePost);
 postRoutes.post("/", createPost);
-postRoutes.patch("/:id", updatePost);
+postRoutes.put("/:id", updatePost);
 postRoutes.delete("/:id", deletePost);
 
 

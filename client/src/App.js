@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import { useDispatch } from 'react-redux';
 import { Routes, Route } from "react-router-dom";
-import { fetchPosts } from './actions/post';
+import {fetchPosts} from './api/index';
 import PostList from './components/PostList';
 import AddPostForm from './components/AddPostForm';
 import PostDetails from './components/PostDetails';
