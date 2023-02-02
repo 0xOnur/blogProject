@@ -1,9 +1,10 @@
 import {createSlice} from '@reduxjs/toolkit';
-import * as api from '../../api';
+import * as api from '../../api/postsApi';
 
 const initialState = {
     posts: [],
-    currentPost: null
+    currentPost: null,
+    error: null,
 };
 
 export const postSlice = createSlice({
@@ -12,9 +13,11 @@ export const postSlice = createSlice({
     reducers: {},
     extraReducers: {
         [api.fetchPosts.fulfilled]: (state, action) => {
+            state.error = null;
             state.posts = action.payload;
         },
         [api.fetchSinglePost.fulfilled]: (state, action) => {
+            state.error = null;
             state.currentPost = action.payload;
         },
         [api.createPost.fulfilled]: (state, action) => {
@@ -27,6 +30,9 @@ export const postSlice = createSlice({
         },
         [api.deletePost.fulfilled]: (state, action) => {
             state.posts = state.posts.filter((post) => post._id !== action.payload._id);
+        },
+        [api.deletePost.rejected]: (state, action) => {
+            state.error = action.payload;
         }
     }
 });

@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 import {useNavigate} from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import FileBase64 from 'react-file-base64';
 import {
   Container,
@@ -8,14 +8,24 @@ import {
   Button,
   InputGroup,
 } from "react-bootstrap";
-import {createPost} from '../api/index';
+import {createPost} from '../api/postsApi';
 
 const tags = ["Fun", "Programming", "Health", "Science","Teknoloji"];
 
 const AddPostForm = () => {
   
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const userId = useSelector((state) => state.user.user?.userFound?._id);
+
+  // this area navigate to login page when user is not logged in
+  useEffect(() => {
+    if(!userId) {
+      navigate('/login');
+    }
+  }, [navigate]);
 
   const [postData, setPostData] = useState();
   const [image, setImage] = useState();
@@ -27,6 +37,7 @@ const AddPostForm = () => {
       return{
         ...prev,
         image:image,
+        creator: userId,
         [name]: value,
       }
     })
@@ -39,13 +50,23 @@ const AddPostForm = () => {
           image:image,
         }
       })
-}, [image]);
+  }, [image]);
+
+  
 
   const onSubmit = (event)=> {
-    dispatch(createPost(postData)).then(() => {
-      console.log("Post created");
-    });
-    navigate('/');
+    event.preventDefault();
+    if(userId) {
+      dispatch(createPost(postData)).then(() => {
+        console.log("Post created");
+        setTimeout(() => {
+          navigate("/");
+        }, 3000);
+      });
+      
+    }else {
+      console.log("User not logged in");
+    }
   };
 
   return (

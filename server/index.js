@@ -1,24 +1,26 @@
 import express from "express";
 import mongoose from "mongoose";
-import bodyParser from "body-parser";
 import cors from "cors";
 import dotenv from "dotenv";
-import postRoutes from "./routes/posts.js";
+import postRoutes from "./routes/postsRoutes.js";
+import userRoutes from "./routes/usersRoutes.js";
+import cookieParser from "cookie-parser";
+
 dotenv.config();
 
 const app = express();
 
 
-app.use(cors());
+app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 
 app.use(express.json());
 
-
-app.get("/", (req, res) => {
-    res.send("Hello world");
-});
-
 app.use("/posts", postRoutes);
+
+app.use("/users", userRoutes);
+
+app.use(cookieParser());
+
 
 const PORT = process.env.PORT || 5000;
 mongoose.set("strictQuery", false);

@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState} from 'react'
 import {useNavigate} from "react-router-dom";
 import { useDispatch } from "react-redux";
 import FileBase64 from 'react-file-base64';
-import {updatePost} from '../api/index';
+import {updatePost} from '../api/postsApi';
 import {
     Container,
     Form,

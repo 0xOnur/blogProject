@@ -6,7 +6,10 @@ const postSchema = mongoose.Schema({
     content: String,
     tag: String,
     image: String,
-    creator: {type: String, default: "Admin"},
+    creator: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+    },
     },
 
 { 

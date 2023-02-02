@@ -1,11 +1,24 @@
 import React, {useEffect} from 'react';
+import { useDispatch } from 'react-redux';
 import {useSelector} from 'react-redux';
 import Post from './Post';
 import { Row,Col } from 'react-bootstrap';
+import {fetchPosts} from '../api/postsApi';
+
+
 
 
 const PostList = () => {
+
+  const dispatch = useDispatch();
+  
+  useEffect(() => {
+    dispatch(fetchPosts());
+  }, [dispatch]);
+
   const posts = useSelector((state) => state?.post?.posts);
+
+  
 
   useEffect(() => {
     console.log(posts);

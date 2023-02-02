@@ -5,8 +5,10 @@ import { Button, Col, Badge, Row } from "react-bootstrap";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import noImage from "../images/noimage.svg";
-import { fetchSinglePost, deletePost } from "../api/index";
+import { fetchSinglePost, deletePost } from "../api/postsApi";
 import EditPost from "./EditPost";
+import UserModal from "./postsModal";
+
 
 const PostDetails = () => {
   const { id } = useParams();
@@ -15,6 +17,10 @@ const PostDetails = () => {
   const navigate = useNavigate();
 
   const currentPost = useSelector((state) => state.post.currentPost);
+  const currentUser = useSelector((state) => state.user.user);
+  const [modalShow, setModalShow] = useState(false);
+
+  console.log(currentUser);
 
   const [editMode, setEditMode] = useState(false);
 
@@ -27,10 +33,11 @@ const PostDetails = () => {
   }, []);
 
   const removePost = () => {
-    dispatch(deletePost(id));
-    setTimeout(() => {
-      navigate("/posts");
-    }, 1000);
+    dispatch(deletePost(id)).then(() => {
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
+    });
   };
 
   const openEditMode = () => {
@@ -78,29 +85,37 @@ const PostDetails = () => {
               <h5>{currentPost?.subTitle}</h5>
             </Col>
 
-            <Col md="12 mb-3">
-              <Button onClick={openEditMode} className="" variant="secondary">
-                Düzenle <FaRegEdit />
-              </Button>
-            </Col>
-            <Col md="12 mb-3">
-              <Button onClick={removePost} variant="danger">
-                Sil <FaTrash />
-              </Button>
-            </Col>
+
+          {currentUser.userFound &&(currentUser?.userFound?._id === currentPost?.creator?._id && (
+              <>
+              <Col md="12 mb-3">
+                <Button onClick={openEditMode} className="" variant="secondary">
+                  Düzenle <FaRegEdit />
+                </Button>
+              </Col>
+              <Col md="12 mb-3">
+                <Button onClick={removePost} variant="danger">
+                  Sil <FaTrash />
+                </Button>
+              </Col>
+            </>)
+            
+          )}
+
+            
             <hr />
           </Row>
 
           <Row>
             <Col md="12">
               <h6>
-                {convertTime(currentPost?.created)} {currentPost?.creator}
+                {convertTime(currentPost?.created)} {currentPost?.creator?.username}
               </h6>
             </Col>
             <Col md="12">
               <h6>
                 Last update: {convertTime(currentPost?.updated)}{" "}
-                {currentPost?.creator}
+                {currentPost?.creator?.username}
               </h6>
             </Col>
             <Col md="12">

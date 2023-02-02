@@ -1,5 +1,6 @@
 import express from "express";
-import { getPosts, createPost, getSinglePost, deletePost, updatePost } from "../controllers/posts.js";
+import { getPosts, createPost, getSinglePost, deletePost, updatePost } from "../controllers/postsController.js";
+import  {postDeleteAuth} from "../middlewares/authMiddleware.js"
 
 const postRoutes = express.Router();
 
@@ -9,7 +10,7 @@ postRoutes.get("/", getPosts);
 postRoutes.get("/:id", getSinglePost);
 postRoutes.post("/", createPost);
 postRoutes.put("/:id", updatePost);
-postRoutes.delete("/:id", deletePost);
+postRoutes.delete("/:id", postDeleteAuth, deletePost);
 
 
 

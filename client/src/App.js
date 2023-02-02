@@ -1,30 +1,28 @@
-import React, {useEffect} from 'react';
-import { useDispatch } from 'react-redux';
+import React from 'react';
 import { Routes, Route } from "react-router-dom";
-import {fetchPosts} from './api/index';
 import PostList from './components/PostList';
 import AddPostForm from './components/AddPostForm';
 import PostDetails from './components/PostDetails';
 import HomeLayout from './components/HomeLayout';
+import Login from './components/user/Login';
+import SignIn from './components/user/SignIn';
+import Profile from './components/user/Profile';
+import Logout from './components/user/Logout';
 
 const App = () => {
-  
-  const dispatch = useDispatch();
-  
-  useEffect(() => {
-    dispatch(fetchPosts());
-  }, [dispatch]);
-
 
   return (
     
     <div>
       <Routes>
         <Route path='/' element={<HomeLayout />}>
-          <Route index={true} element={<PostList />} />
-            <Route path="/posts" element={<PostList />} />
+            <Route index element={<PostList />} />
             <Route path="/posts/add" element={<AddPostForm />} />
             <Route path="/posts/:id" element={<PostDetails />} />
+            <Route path="/register" element={<SignIn />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/logout" element={<Logout />} />
         </Route>
       </Routes>
     </div>
