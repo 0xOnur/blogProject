@@ -1,7 +1,7 @@
 import User from  "../models/usersModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-
+import mongoose from "mongoose";
 
 export const getUsers = async (req, res) => {
     try {
@@ -23,15 +23,25 @@ export const getUserById = async (req, res) => {
 }
 
 export const createUser = async (req, res) => {
-    const user = req.body;
-    const newUser = new User(user);
     try {
-        await newUser.save();
-        res.status(201).json(newUser);
+      const user = new User(req.body);
+      await user.validate();
+      await user.save();
+      const userFound = user;
+      const token = generateToken(userFound._id.toString());
+      res.status(201).json({
+        userFound,
+        token: token
+    });
     } catch (error) {
-        res.status(409).json({ message: error.message });
+      if (error instanceof mongoose.Error.ValidationError) {
+        const messages = Object.values(error.errors).map(val => val.message);
+        res.status(400).send(messages);
+      } else {
+        res.status(500).send(error);
+      }
     }
-}
+  };
 
 export const loginUser = async (req, res) => {
     const user = req.body;
@@ -41,7 +51,6 @@ export const loginUser = async (req, res) => {
             const isPasswordCorrect = await bcrypt.compare(user.password, userFound.password);
             if (isPasswordCorrect) {
                 const token = generateToken(userFound._id);
-
                 res.status(200).json({
                     userFound,
                     token: token
@@ -85,7 +94,7 @@ const generateToken = (userId) => {
     return jwt.sign(
         { _id: userId }, 
         process.env.JWT_SECRET, 
-        { expiresIn: "30d" });
+        { expiresIn: "1d" });
 }
 
     

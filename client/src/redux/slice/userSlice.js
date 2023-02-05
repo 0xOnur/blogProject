@@ -30,13 +30,17 @@ export const userSlice = createSlice({
         [api.logoutUser.rejected]: (state, action) => {
             state.error = action.payload;
         },
-
-        
         [api.getUserById.fulfilled]: (state, action) => {
             state.user = action.payload;
         },
         [api.createUser.fulfilled]: (state, action) => {
             state.user = action.payload;
+        },
+        [api.createUser.rejected]: (state, action) => {
+            state.error = action.payload;
+        },
+        [api.createUser.pending]: (state) => {
+            state.error = null;
         },
         [api.updateUser.fulfilled]: (state, action) => {
             state.user = action.payload;

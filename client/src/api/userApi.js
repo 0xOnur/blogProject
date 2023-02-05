@@ -46,11 +46,21 @@ export const getUserById = createAsyncThunk(
 
 export const createUser = createAsyncThunk(
     "createUser",
-    async (userData) => {
-        const response = await axios.post(`${userEndpoint}register`, userData);
-        const data = response.data;
-        return data;
+    async (userData, { rejectWithValue }) => {
+        try {
+            const response = await axios.post(`${userEndpoint}register`, userData);
+            const data = response.data;
+            localStorage.setItem('token', data.token);
+            return data;
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
     }
+    // async (userData) => {
+    //     const response = await axios.post(`${userEndpoint}register`, userData);
+    //     const data = response.data;
+    //     return data;
+    // }
 );
 
 export const updateUser = createAsyncThunk(

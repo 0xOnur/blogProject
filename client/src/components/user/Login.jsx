@@ -16,11 +16,10 @@ const Login = () => {
 
 
   useEffect(() => {
-    if (user?.user?.userFound) {
+    if (user?.user.userFound) {
       navigate("/");
     }
   }, [navigate]);
-  
 
   const [modalShow, setModalShow] = useState(false);
 

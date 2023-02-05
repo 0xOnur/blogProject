@@ -2,7 +2,7 @@ import React from 'react'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
-const UserModal = (props) => {
+const PostsModal = (props) => {
     return (
         <Modal
           {...props}
@@ -28,4 +28,4 @@ const UserModal = (props) => {
       );
 }
 
-export default UserModal;
+export default PostsModal;

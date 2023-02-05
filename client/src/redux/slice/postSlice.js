@@ -20,13 +20,18 @@ export const postSlice = createSlice({
             state.error = null;
             state.currentPost = action.payload;
         },
+        [api.createPost.rejected]: (state, action) => {
+            state.error = action.payload;
+        },
+        [api.createPost.pending]: (state, action) => {
+            state.error = null;
+        },
         [api.createPost.fulfilled]: (state, action) => {
             state.posts.push(action.payload);
         },
         [api.updatePost.fulfilled]: (state, action) => {
             state.posts = state.posts.map((post) => post._id === action.payload._id ? action.payload : post);
             state.currentPost = action.payload;
-            
         },
         [api.deletePost.fulfilled]: (state, action) => {
             state.posts = state.posts.filter((post) => post._id !== action.payload._id);

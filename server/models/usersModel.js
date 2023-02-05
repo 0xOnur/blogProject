@@ -6,12 +6,14 @@ const userSchema = mongoose.Schema(
     {
         username: {
             type: String,
+            required: [true, "Lütfen kullanıcı adınızı girin."],
             unique: [true, "Bu kullanıcı adı zaten alınmış."],
             trim: true,
             lowercase: true,
         },
         email: {
             type: String,
+            required: [true, "Lütfen mail adresinizi girin."],
             unique: [true, "Bu mail adresi zaten alınmış."],
             trim: true,
         },

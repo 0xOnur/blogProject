@@ -13,10 +13,14 @@ export const fetchPosts = createAsyncThunk(
 
 export const createPost = createAsyncThunk(
     'createPost',
-    async (postData) => {
-        const response = await axios.post(`${postsEndpoint}`, postData);
-        const data = response.data;
-        return data;
+    async (postData, {rejectWithValue}) => {
+        try {
+            const response = await axios.post(`${postsEndpoint}`, postData);
+            const data = response.data;
+            return data;
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
     }
 )
 

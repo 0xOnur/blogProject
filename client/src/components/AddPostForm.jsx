@@ -9,6 +9,8 @@ import {
   InputGroup,
 } from "react-bootstrap";
 import {createPost} from '../api/postsApi';
+import PostsModal from "./postsModal";
+
 
 const tags = ["Fun", "Programming", "Health", "Science","Teknoloji"];
 
@@ -20,12 +22,17 @@ const AddPostForm = () => {
 
   const userId = useSelector((state) => state.user.user?.userFound?._id);
 
-  // this area navigate to login page when user is not logged in
-  useEffect(() => {
-    if(!userId) {
-      navigate('/login');
-    }
-  }, [navigate]);
+  !userId && (
+    setTimeout(() => {
+      navigate("/login");
+    }, 0)
+  );
+
+
+  const error = useSelector((state) => state.post.error);
+  console.log(error);
+
+  const [modalShow, setModalShow] = useState(false);
 
   const [postData, setPostData] = useState();
   const [image, setImage] = useState();
@@ -57,15 +64,18 @@ const AddPostForm = () => {
   const onSubmit = (event)=> {
     event.preventDefault();
     if(userId) {
-      dispatch(createPost(postData)).then(() => {
-        console.log("Post created");
-        setTimeout(() => {
-          navigate("/");
-        }, 3000);
+      dispatch(createPost(postData)).then((response) => {
+        console.log(response);
+        if(response?.error?.message){
+          setModalShow(true);
+          console.log(response.error.message);
+        }else {
+          setModalShow(true);
+          setTimeout(() => {
+            navigate("/");
+          }, 3000);
+        }
       });
-      
-    }else {
-      console.log("User not logged in");
     }
   };
 
@@ -75,7 +85,7 @@ const AddPostForm = () => {
         <Form onSubmit={onSubmit}>
           <Form.Group className="mb-3" controlId="formTitle">
             <Form.Label>Başlık</Form.Label>
-            <Form.Control onChange={handleChange} name="title" type="text" required placeholder="Başlık" />
+            <Form.Control onChange={handleChange} name="title" type="text" placeholder="Başlık" />
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formSubTitle">
@@ -85,7 +95,7 @@ const AddPostForm = () => {
 
           <Form.Group className="mb-3">
             <Form.Label>Konu Etiketi Seçin:</Form.Label>
-            <Form.Select onChange={handleChange} name="tag" required>
+            <Form.Select onChange={handleChange} name="tag">
               {tags.map((tag,index) => {
                 return <option key={index} value={tag}>{tag}</option>
               })}
@@ -95,7 +105,7 @@ const AddPostForm = () => {
           <Form.Group className="mb-3">
             <InputGroup>
               <InputGroup.Text>İçeriği Giriniz</InputGroup.Text>
-              <Form.Control onChange={handleChange} name="content" required as="textarea" aria-label="With textarea" />
+              <Form.Control onChange={handleChange} name="content" as="textarea" aria-label="With textarea" />
             </InputGroup>
           </Form.Group>
           
@@ -108,6 +118,23 @@ const AddPostForm = () => {
           <Button variant="primary" type="submit" className="mt-3">
             Yayınla
           </Button>
+          {error?.message ? (
+            <PostsModal
+              show={modalShow}
+              onHide={() => setModalShow(false)}
+              title="Hata"
+              body="Post oluşturulamadı!"
+              description="Boş bıraktığınız alanları doldurunuz."
+            />
+          ):(
+            <PostsModal
+              show={modalShow}
+              onHide={() => setModalShow(false)}
+              title="Başarılı"
+              body="Post oluşturuldu!"
+              description="Anasayfaya yönlendiriliyorsunuz.."
+            />
+          )}
         </Form>
     </Container>
     </>    
