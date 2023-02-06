@@ -5,9 +5,6 @@ import Post from './Post';
 import { Row,Col } from 'react-bootstrap';
 import {fetchPosts} from '../api/postsApi';
 
-
-
-
 const PostList = () => {
 
   const dispatch = useDispatch();
@@ -17,12 +14,6 @@ const PostList = () => {
   }, [dispatch]);
 
   const posts = useSelector((state) => state?.post?.posts);
-
-  
-
-  useEffect(() => {
-    console.log(posts);
-  }, [posts]);
 
   return (
     <>

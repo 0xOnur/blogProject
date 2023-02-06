@@ -33,7 +33,6 @@ export const updatePost = createAsyncThunk(
     }
 )
 
-
 export const deletePost = createAsyncThunk(
     'deletePost',
     async (id, {rejectWithValue}) => {
@@ -56,9 +55,13 @@ export const deletePost = createAsyncThunk(
 
 export const fetchSinglePost = createAsyncThunk(
     'fetchSinglePost',
-    async (id) => {
-        const response = await axios.get(`${postsEndpoint}${id}`);
-        const data = response.data;
-        return data;
+    async (id, {rejectWithValue}) => {
+        try {
+            const response = await axios.get(`${postsEndpoint}${id}`);
+            const data = response.data;
+            return data;
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
     }
 )

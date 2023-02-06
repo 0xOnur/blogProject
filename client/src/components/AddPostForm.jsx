@@ -30,11 +30,10 @@ const AddPostForm = () => {
 
 
   const error = useSelector((state) => state.post.error);
-  console.log(error);
 
   const [modalShow, setModalShow] = useState(false);
 
-  const [postData, setPostData] = useState();
+  const [postData, setPostData] = useState({creator: userId});
   const [image, setImage] = useState();
 
 
@@ -44,7 +43,6 @@ const AddPostForm = () => {
       return{
         ...prev,
         image:image,
-        creator: userId,
         [name]: value,
       }
     })
@@ -68,11 +66,10 @@ const AddPostForm = () => {
         console.log(response);
         if(response?.error?.message){
           setModalShow(true);
-          console.log(response.error.message);
         }else {
           setModalShow(true);
           setTimeout(() => {
-            navigate("/");
+            navigate(`/posts/${response?.payload?._id}`);
           }, 3000);
         }
       });
@@ -118,13 +115,13 @@ const AddPostForm = () => {
           <Button variant="primary" type="submit" className="mt-3">
             Yayınla
           </Button>
-          {error?.message ? (
+          {error?.messages ? (
             <PostsModal
               show={modalShow}
               onHide={() => setModalShow(false)}
               title="Hata"
               body="Post oluşturulamadı!"
-              description="Boş bıraktığınız alanları doldurunuz."
+              description={error?.messages}
             />
           ):(
             <PostsModal
@@ -132,7 +129,7 @@ const AddPostForm = () => {
               onHide={() => setModalShow(false)}
               title="Başarılı"
               body="Post oluşturuldu!"
-              description="Anasayfaya yönlendiriliyorsunuz.."
+              description="Post'a yönlendiriliyorsunuz.."
             />
           )}
         </Form>

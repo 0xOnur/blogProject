@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const postSchema = mongoose.Schema({
     title: {
         type: String,
-        required: [true, "Lütfen başlık girin."],
+        required: [true, "Lütfen başlık girin. "],
     },
     subTitle: {
         type: String,
@@ -11,11 +11,11 @@ const postSchema = mongoose.Schema({
     content: {
         type: String,
         required: [true, "Lütfen içerik girin."],
-        minlength: [10, "İçerik en az 10 karakterden oluşmalıdır."],
+        minlength: [10, "İçerik en az 10 karakterden oluşmalıdır. "],
     },
     tag: {
         type: String,
-        required: [true, "Lütfen bir kategori seçin."],
+        required: [true, "Lütfen bir kategori seçin. "],
     },
     image: String,
     creator: {

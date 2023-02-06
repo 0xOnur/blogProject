@@ -20,6 +20,9 @@ export const postSlice = createSlice({
             state.error = null;
             state.currentPost = action.payload;
         },
+        [api.fetchSinglePost.rejected]: (state, action) => {
+            state.error = action.payload;
+        },
         [api.createPost.rejected]: (state, action) => {
             state.error = action.payload;
         },

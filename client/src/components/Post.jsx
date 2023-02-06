@@ -16,7 +16,7 @@ const Post = ({post}) => {
           <Card.Img style={{opacity:'0.6'}} variant="top" src={post.image || noImage} />
           <Card.Body>
           <Card.Text>{convertTime(post.created)}</Card.Text>
-            <Card.Text>Yazar: {post.creator}</Card.Text>
+            <Card.Text>Yazar: {post.creator?.username}</Card.Text>
             <Card.Text>#{post.tag}</Card.Text>
             <Card.Title>{post.title}</Card.Title>
             <br />
