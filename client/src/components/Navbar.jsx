@@ -6,6 +6,7 @@ import {
   Button,
   NavDropdown,
   Col,
+  Image,
 } from "react-bootstrap/";
 import Nav from "react-bootstrap/Nav";
 import {useSelector} from "react-redux";
@@ -38,14 +39,18 @@ function NAV() {
             {/* this area username link and dropdown menu for logout and profile page link */}
             <Col md='2'>
               {user?.userFound && (
+                <>
+                <Image src={user.userFound.image} width={50} height={50} roundedCircle />
                 <NavDropdown title={user.userFound.username} id="basic-nav-dropdown">
-                  <NavDropdown.Item href="/profile">
+                  <NavDropdown.Item href={"/users/"+user.userFound._id}>
                     Profile
                   </NavDropdown.Item>
                   <NavDropdown.Item href="/logout">
                     Logout
                   </NavDropdown.Item>
                 </NavDropdown>
+                </>
+                
               )}
             </Col>
             

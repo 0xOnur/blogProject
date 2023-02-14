@@ -11,9 +11,6 @@ const postDeleteAuth = async (req, res, next) => {
 
         const decoded = jwt.decode(token, process.env.JWT_SECRET);
 
-        console.log("decoded_jwt ;", decoded?._id);
-        console.log("postCreatorId ;", post?.creator?.toHexString());
-        
         if(token) {
             jwt.verify(token, process.env.JWT_SECRET, (err) => {
                 if(err) {
@@ -35,7 +32,5 @@ const postDeleteAuth = async (req, res, next) => {
         res.status(401).json({ message: "Token is not valid" });
     }
 }
-
-
 
 export { postDeleteAuth };

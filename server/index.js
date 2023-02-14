@@ -5,8 +5,15 @@ import dotenv from "dotenv";
 import postRoutes from "./routes/postsRoutes.js";
 import userRoutes from "./routes/usersRoutes.js";
 import cookieParser from "cookie-parser";
+import {v2 as cloudinary} from "cloudinary";
 
 dotenv.config();
+
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.CLOUD_API,
+    api_secret: process.env.CLOUD_API_SECRET
+});
 
 const app = express();
 
@@ -14,6 +21,7 @@ const app = express();
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 
 app.use(express.json());
+app.use('/', express.static('uploads'));
 
 app.use("/posts", postRoutes);
 

@@ -19,7 +19,7 @@ const rootReducer = combineReducers({
       {
         key: 'post',
         storage: storage,
-        blacklist: ['currentPost'],
+        blacklist: ['currentPost', 'isPending', 'error'],
       },
 
       postsReducer,
@@ -28,7 +28,7 @@ const rootReducer = combineReducers({
         {
           key: 'user',
           storage: storage,
-          blacklist: ['error'],
+          blacklist: ['error', 'userPosts'],
         },
         userReducer,
       ),

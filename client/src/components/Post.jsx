@@ -12,11 +12,19 @@ const Post = ({post}) => {
 
   return (
     <>
+    <style type="text/css">
+        {`
+        a {
+          text-decoration: none;
+          background-color: transparent;
+        }
+      `}
+      </style>
         <Card style={{ width: '20rem'}} className="bg-dark text-white postCard">
           <Card.Img style={{opacity:'0.6'}} variant="top" src={post.image || noImage} />
           <Card.Body>
           <Card.Text>{convertTime(post.created)}</Card.Text>
-            <Card.Text>Yazar: {post.creator?.username}</Card.Text>
+            <Card.Text>Yazar: <a href = {'/users/'+post.creator._id}>{post.creator?.username}</a></Card.Text>
             <Card.Text>#{post.tag}</Card.Text>
             <Card.Title>{post.title}</Card.Title>
             <br />

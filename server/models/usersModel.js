@@ -22,6 +22,10 @@ const userSchema = mongoose.Schema(
             required: [true, "Lütfen şifrenizi girin."],
             minlength: [6, "Şifreniz en az 6 karakterden oluşmalıdır."],
         },
+        image: {
+            type: String,
+            default: "https://res.cloudinary.com/dwcw9iftp/image/upload/c_scale,w_150/v1676323965/users/1053244_qikxct.png",
+        },
         role: {
             type: String,
             enum: ["user", "admin"],
@@ -50,6 +54,9 @@ const userSchema = mongoose.Schema(
 )
 
 userSchema.pre("save", async function (next) {
+    if (!this.isModified("password")) {
+        return next();
+    }
     this.password = await bcrypt.hash(this.password, 10);
     next();
 });

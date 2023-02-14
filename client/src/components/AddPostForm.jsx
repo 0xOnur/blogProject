@@ -1,7 +1,6 @@
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import FileBase64 from 'react-file-base64';
 import {
   Container,
   Form,
@@ -10,12 +9,15 @@ import {
 } from "react-bootstrap";
 import {createPost} from '../api/postsApi';
 import PostsModal from "./postsModal";
+import {fetchSingleUser} from "../api/userApi";
+import { useForm } from "react-hook-form";
+
 
 
 const tags = ["Fun", "Programming", "Health", "Science","Teknoloji"];
 
 const AddPostForm = () => {
-  
+  const {register, handleSubmit, formState: { errors }} = useForm();
   
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -33,40 +35,25 @@ const AddPostForm = () => {
 
   const [modalShow, setModalShow] = useState(false);
 
-  const [postData, setPostData] = useState({creator: userId});
-  const [image, setImage] = useState();
+  const onSubmit = (data)=> {
 
+    console.log("data: ", data);
+    const formData = new FormData();
+    
+    formData.append("title", data.title);
+    formData.append("subTitle", data.subTitle);
+    formData.append("content", data.content);
+    formData.append("tag", data.tag);
+    formData.append("creator", userId);
+    formData.append("image", data.image[0]);
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setPostData((prev)=> {
-      return{
-        ...prev,
-        image:image,
-        [name]: value,
-      }
-    })
-  }
-
-  useEffect(() => {
-    setPostData((prev)=> {
-        return{
-          ...prev,
-          image:image,
-        }
-      })
-  }, [image]);
-
-  
-
-  const onSubmit = (event)=> {
-    event.preventDefault();
     if(userId) {
-      dispatch(createPost(postData)).then((response) => {
+      dispatch(createPost(formData)).then((response) => {
         console.log(response);
         if(response?.error?.message){
           setModalShow(true);
         }else {
+          dispatch(fetchSingleUser(userId));
           setModalShow(true);
           setTimeout(() => {
             navigate(`/posts/${response?.payload?._id}`);
@@ -79,20 +66,20 @@ const AddPostForm = () => {
   return (
     <>
     <Container className="mt-5">
-        <Form onSubmit={onSubmit}>
+        <Form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
           <Form.Group className="mb-3" controlId="formTitle">
             <Form.Label>Başlık</Form.Label>
-            <Form.Control onChange={handleChange} name="title" type="text" placeholder="Başlık" />
+            <Form.Control {...register("title", { required: true })} type="text" placeholder="Başlık" />
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formSubTitle">
             <Form.Label>Alt Başlık</Form.Label>
-            <Form.Control onChange={handleChange} name="subTitle" type="text" placeholder="Alt Başlık" />
+            <Form.Control {...register("subTitle", { required: true })}  type="text" placeholder="Alt Başlık" />
           </Form.Group>
 
           <Form.Group className="mb-3">
             <Form.Label>Konu Etiketi Seçin:</Form.Label>
-            <Form.Select onChange={handleChange} name="tag">
+            <Form.Select {...register("tag", { required: true })}>
               {tags.map((tag,index) => {
                 return <option key={index} value={tag}>{tag}</option>
               })}
@@ -102,14 +89,14 @@ const AddPostForm = () => {
           <Form.Group className="mb-3">
             <InputGroup>
               <InputGroup.Text>İçeriği Giriniz</InputGroup.Text>
-              <Form.Control onChange={handleChange} name="content" as="textarea" aria-label="With textarea" />
+              <Form.Control {...register("content", { required: true })} as="textarea" aria-label="With textarea" />
             </InputGroup>
           </Form.Group>
           
           <Form.Group controlId="formFile" className="mb-3">
             <Form.Label>Blog Kapak Fotoğrafı</Form.Label>
             <br />
-            <FileBase64 multiple={false} onDone={({base64}) => setImage(base64)} />
+            <Form.Control {...register("image", { required: true })} name="image" type="file" />
           </Form.Group>
 
           <Button variant="primary" type="submit" className="mt-3">

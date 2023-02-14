@@ -26,17 +26,21 @@ const Register = () => {
   }, [navigate]);
   
   const onSubmit = (data) => {
-    dispatch(createUser(data)).then((response) => {
-      console.log(response);
+    const formData = new FormData();
+
+    formData.append("username", data.username);
+    formData.append("email", data.email);
+    formData.append("password", data.password);
+    formData.append("image", data.image[0]);
+
+    dispatch(createUser(formData)).then((response) => {
       if (response?.error?.message) {
           setModalShow(true);
-          console.log(response.error);
       }else {
         setTimeout(() => {
           navigate("/");
         }, 3000);
         setModalShow(true);
-        console.log("kayıt başarılı");
       }
     })
   };
@@ -81,6 +85,12 @@ const Register = () => {
                         <Form.Label>Password</Form.Label>
                         <Form.Control {...register("password", { required: true })} type="password" placeholder="Enter Password" />
                         {errors.password && <span>Bu alan zorunludur</span>}
+                  </Form.Group>
+
+                  <Form.Group controlId="formFile" className="mb-3">
+                        <Form.Label>Avatar Fotoğrafı</Form.Label>
+                        <br />
+                        <Form.Control {...register("image", { required: true })} name="image" type="file" />
                   </Form.Group>
 
                   <Col className="form-header">

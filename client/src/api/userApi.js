@@ -1,16 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import jwt_decode from "jwt-decode";
 
 const userEndpoint = "http://localhost:5000/users/";
-
-export const fetchUsers = createAsyncThunk(
-    "fetchUsers",
-    async () => {
-        const response = await axios.get(`${userEndpoint}`);
-        const data = response.data;
-        return data;
-    }
-);
 
 export const loginUser = createAsyncThunk(
     "loginUser",
@@ -23,6 +15,25 @@ export const loginUser = createAsyncThunk(
         } catch (error) {
             return rejectWithValue(error.response.data);
         }
+    }
+);
+
+export const fetchSingleUser = createAsyncThunk(
+    "fetchSingleUser",
+    async (id) => {
+        const response = await axios.get(`${userEndpoint}${id}`);
+        const userFound = response.data;
+        const token = localStorage.getItem('token');
+        return { userFound, token };
+    }
+);
+
+export const fetchUserPosts = createAsyncThunk(
+    "fetchUserPosts",
+    async (id) => {
+        const response = await axios.get(`${userEndpoint}${id}/posts`);
+        const data = response.data;
+        return data;
     }
 );
 
@@ -56,11 +67,6 @@ export const createUser = createAsyncThunk(
             return rejectWithValue(error.response.data);
         }
     }
-    // async (userData) => {
-    //     const response = await axios.post(`${userEndpoint}register`, userData);
-    //     const data = response.data;
-    //     return data;
-    // }
 );
 
 export const updateUser = createAsyncThunk(
@@ -81,3 +87,11 @@ export const deleteUser = createAsyncThunk(
     }
 );
 
+export const tokenIsExpired = async(token) => {
+    if(token) {
+        const decodedToken = jwt_decode(token);
+        const currentTime = Date.now() / 1000;
+        const isExpired = decodedToken.exp < currentTime;
+        return isExpired || false;
+    }
+}

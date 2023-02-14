@@ -6,6 +6,7 @@ import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import noImage from "../images/noimage.svg";
 import { fetchSinglePost, deletePost } from "../api/postsApi";
+import { fetchSingleUser } from "../api/userApi";
 import EditPost from "./EditPost";
 
 const PostDetails = () => {
@@ -34,6 +35,9 @@ const PostDetails = () => {
 
   const removePost = () => {
     dispatch(deletePost(id)).then(() => {
+      //this area getUserById dispatch for update user's posts in redux store
+      console.log(currentUser.userFound._id);
+      dispatch(fetchSingleUser(currentUser.userFound._id))
       setTimeout(() => {
         navigate("/");
       }, 1000);
@@ -52,6 +56,10 @@ const PostDetails = () => {
     <>
       <style type="text/css">
         {`
+        a {
+          text-decoration: none;
+          background-color: transparent;
+        }
         .post-content {
           margin-top: 1rem;
           margin-bottom: 3rem;
@@ -108,13 +116,14 @@ const PostDetails = () => {
               <Row>
                 <Col md="12">
                   <h6>
-                    {convertTime(currentPost?.created)} {currentPost?.creator?.username}
+                    {convertTime(currentPost?.created)} 
+                    <a href={"/users/"+currentPost.creator._id}> {currentPost?.creator?.username}</a>
                   </h6>
                 </Col>
                 <Col md="12">
                   <h6>
                     Last update: {convertTime(currentPost?.updated)}{" "}
-                    {currentPost?.creator?.username}
+                    <a href={"/users/"+currentPost.creator._id}> {currentPost?.creator?.username}</a>
                   </h6>
                 </Col>
                 <Col md="12">

@@ -26,10 +26,14 @@ export const createPost = createAsyncThunk(
 
 export const updatePost = createAsyncThunk(
     'updatePost',
-    async ({id, postData}, _) => {
-        const response = await axios.put(`${postsEndpoint}${id}`, postData);
-        const data = response.data;
-        return data;
+    async ({id, formData}, {rejectWithValue}, _) => {
+        try {
+            const response = await axios.put(`${postsEndpoint}${id}`, formData);
+            const data = response.data;
+            return data;
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
     }
 )
 
@@ -49,7 +53,6 @@ export const deletePost = createAsyncThunk(
         } catch (error) {
             return rejectWithValue(error.response.data);
         }
-        
     }
 )
 
