@@ -24,7 +24,7 @@ const userSchema = mongoose.Schema(
         },
         image: {
             type: String,
-            default: "https://res.cloudinary.com/dwcw9iftp/image/upload/c_scale,w_150/v1676323965/users/1053244_qikxct.png",
+            default: "https://res.cloudinary.com/dwcw9iftp/image/upload/v1676581806/Blogify/users/user_318-790139_kkrcfr.avif",
         },
         role: {
             type: String,

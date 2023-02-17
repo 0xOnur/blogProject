@@ -28,6 +28,8 @@ export const fetchSingleUser = createAsyncThunk(
     }
 );
 
+
+
 export const fetchUserPosts = createAsyncThunk(
     "fetchUserPosts",
     async (id) => {
@@ -87,11 +89,29 @@ export const deleteUser = createAsyncThunk(
     }
 );
 
+export const followUser = async ({id, currentUser}) => {
+    console.log(id, currentUser, 36);
+    try {
+        const config = {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                id: `${id}`
+            },
+        };
+
+        const response = await axios.put(`${userEndpoint}${id}`, currentUser, config);
+        const data = response.data;
+        return data;
+    } catch (error) {
+        return error;
+    }
+} 
+
 export const tokenIsExpired = async(token) => {
     if(token) {
         const decodedToken = jwt_decode(token);
         const currentTime = Date.now() / 1000;
-        const isExpired = decodedToken.exp < currentTime;
+        const isExpired = decodedToken.exp.toString() < currentTime.toString().split(".")[0];
         return isExpired || false;
     }
 }

@@ -21,25 +21,17 @@ const rootReducer = combineReducers({
         storage: storage,
         blacklist: ['currentPost', 'isPending', 'error'],
       },
-
       postsReducer,
     ),
     user: persistReducer(
         {
           key: 'user',
           storage: storage,
-          blacklist: ['error', 'userPosts'],
+          blacklist: ['error'],
         },
         userReducer,
       ),
   });
-
-// const store = configureStore({
-//     reducer: {
-//         post: postsReducer,
-//         user: userReducer
-//     }
-// });
 
 const store = configureStore({
     reducer: rootReducer,

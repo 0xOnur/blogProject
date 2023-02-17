@@ -4,7 +4,7 @@ import moment from 'moment'
 import {Link} from 'react-router-dom';
 import noImage from '../images/noimage.svg';
 
-const Post = ({post}) => {
+const Post = React.memo(({post}) => {
 
   const convertTime = (time) => {
     return moment(time).fromNow();
@@ -38,6 +38,6 @@ const Post = ({post}) => {
         </Card>
     </>
   )
-}
+});
 
 export default Post;

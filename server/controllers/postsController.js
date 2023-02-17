@@ -29,37 +29,29 @@ export const getSinglePost = async (req, res) => {
 
 export const createPost = async (req, res) => {
     const options = {
-        use_filename: true,
-        folder: "Blogify/Posts",
+        folder: "Blofigy/posts",
         allowed_formats: ["jpg", "png", "jpeg"],
         quality: "auto:eco",
     };
 
     try {
+
         const newPost = new Post({
             title: req.body.title,
             subTitle: req.body.subTitle,
             tag: req.body.tag,
             content: req.body.content,
             creator: req.body.creator,
-            image: "null",
+            image: null,
         });
 
-        const result = await cloudinary.v2.uploader.upload(req.file.path, options)
-
-        //this area clear a file after upload
-        fs.unlink(`uploads/posts/${req.file.filename}`, (error) => {
-            if (error) {
-              console.error(error);
-            } else {
-              console.log(`uploads/posts/${req.file.filename} was deleted.`);
-            }
-        });
-        //
-
-        newPost.image = result.secure_url;
-        
         await newPost.validate();
+
+        if(req.file) {
+            const result = await cloudinary.v2.uploader.upload(req.file.buffer, options);
+            newPost.image = result.secure_url;
+        }
+
         await newPost.save();
 
         //this area adds the post id to the user's posts array
@@ -70,14 +62,13 @@ export const createPost = async (req, res) => {
 
         res.status(201).json(newPost);
     } catch (error) {
-        console.log(error);
+        res.status(409).json({ message: error.message });
     }
 };
 
 export const updatePost = async (req, res) => {
     const options = {
-        use_filename: true,
-        folder: "Blogify/Posts",
+        folder: "Blogify/posts",
         allowed_formats: ["jpg", "png", "jpeg"],
         quality: "auto:eco",
     };
@@ -85,48 +76,43 @@ export const updatePost = async (req, res) => {
     try {
         const {id : _id} = req.params;
 
-        console.log(req?.file?.path);
 
-        const newPost = {
+        const newPost = new Post({
+            _id: _id,
             title: req.body.title,
             subTitle: req.body.subTitle,
             tag: req.body.tag,
             content: req.body.content,
             creator: req.body.creator,
             image: req.body.image,
-        };
+            imageId: req.body.imageId,
+        });
+        await newPost.validate();
 
+        if(req.file) {
+            const result = await cloudinary.v2.uploader.upload(req?.file?.path, options);
 
-        const oldPost = await Post.findById(_id);
-        if(newPost.image === oldPost.image) {
-            const updatedPost = await Post.findByIdAndUpdate(_id, newPost, {new: true})
-            console.log(newPost, 90);
-            res.json(updatedPost);
-        }else {
-            const result = await cloudinary.v2.uploader.upload(req.file.path, options)
             newPost.image = result.secure_url;
+            newPost.imageId = result.public_id;
 
-            //this area clear a file after upload
-            fs.unlink(`uploads/posts/${req.file.filename}`, (error) => {
-                if (error) {
-                console.error(error);
-                } else {
-                console.log(`uploads/posts/${req.file.filename} was deleted.`);
-                }
+            //this area removes the old image from cloudinary
+            const oldPost = await Post.findById(_id);
+            const oldImageId = oldPost.imageId;
+
+            cloudinary.uploader.destroy(oldImageId, {invalidate: true}, (error, result) => {
+                console.log(result, error);
             });
-            //
-            console.log(newPost, 99);
-
-            const updatedPost = await Post.findByIdAndUpdate(_id, newPost, {new: true})
-            res.json(updatedPost);
         }
+
+        const updatedPost = await Post.findByIdAndUpdate(_id, newPost, {new: true});
+
+        res.status(200).json(updatedPost);
     } catch (error) {
         res.status(409).json({ message: error.message });
     }
 }
 
 export const deletePost = async (req, res) => {
-    console.log("REQ PARAMS:  ", req.params);
     try {
         const {id : _id} = req.params;
         const deletedPost = await Post.findByIdAndDelete(_id);

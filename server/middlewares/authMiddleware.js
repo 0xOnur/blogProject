@@ -1,5 +1,7 @@
 import jwt from "jsonwebtoken";
 import Post from "../models/postsModel.js";
+import User from "../models/usersModel.js";
+
 
 const postDeleteAuth = async (req, res, next) => {
 
@@ -33,4 +35,40 @@ const postDeleteAuth = async (req, res, next) => {
     }
 }
 
-export { postDeleteAuth };
+const followUserAuth = async (req, res, next) => {
+    try {
+        const token = req.headers.authorization.split(" ")[1];
+        const decoded = jwt.decode(token, process.env.JWT_SECRET);
+
+
+        const userId = req.body._id;
+
+        const targetFollow = req.params.id;
+
+        const userFollowingList = await User.findById(decoded._id).select("following");
+
+        if(token) {
+            jwt.verify(token, process.env.JWT_SECRET, (err) => {
+                if(err) {
+                    res.status(401).json({ message: "Token is not valid" });
+                }else {
+                    if(decoded._id === userId) {
+                        if(userFollowingList.following.includes(targetFollow)) {
+                            res.status(401).json({ message: "You are already following this user" });
+                        }else {
+                            next();
+                        }
+                    }else {
+                        res.status(401).json({ message: "You are not authorized to follow this user" });
+                    }
+                }
+            });
+        }else {
+            res.status(401).json({ message: "No token, authorization denied" });
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export { postDeleteAuth, followUserAuth };

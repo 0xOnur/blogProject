@@ -1,11 +1,12 @@
 import express from "express";
 import multer from "multer";
 import { getPosts, createPost, getSinglePost, deletePost, updatePost } from "../controllers/postsController.js";
-import  {postDeleteAuth} from "../middlewares/authMiddleware.js"
+import  {postDeleteAuth} from "../middlewares/authMiddleware.js";
 
 const postRoutes = express.Router();
 
-const upload = multer({ dest: 'uploads/posts/' })
+
+const upload = multer({storage: multer.diskStorage({})});
 
 //https://localhost:5000/posts
 

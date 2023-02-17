@@ -4,7 +4,6 @@ import cors from "cors";
 import dotenv from "dotenv";
 import postRoutes from "./routes/postsRoutes.js";
 import userRoutes from "./routes/usersRoutes.js";
-import cookieParser from "cookie-parser";
 import {v2 as cloudinary} from "cloudinary";
 
 dotenv.config();
@@ -26,8 +25,6 @@ app.use('/', express.static('uploads'));
 app.use("/posts", postRoutes);
 
 app.use("/users", userRoutes);
-
-app.use(cookieParser());
 
 
 const PORT = process.env.PORT || 5000;

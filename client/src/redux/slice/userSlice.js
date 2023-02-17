@@ -5,7 +5,7 @@ const initialState = {
     user: [],
     //there is any user profile
     userProfile: null,
-    //there is any user profile
+    //
     userPosts: [],
     error: null
 }
@@ -40,8 +40,8 @@ export const userSlice = createSlice({
         [api.getUserById.fulfilled]: (state, action) => {
             state.userProfile = action.payload;
         },
-        [api.createUser.fulfilled]: (state, action) => {
-            state.user = action.payload;
+        [api.followUser.rejected]: (state, action) => {
+            state.error = action.payload;
         },
         [api.createUser.rejected]: (state, action) => {
             state.error = action.payload;

@@ -18,6 +18,7 @@ const postSchema = mongoose.Schema({
         required: [true, "Lütfen bir kategori seçin. "],
     },
     image: String,
+    imageId: String,
     creator: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,

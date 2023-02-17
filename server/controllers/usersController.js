@@ -20,8 +20,8 @@ export const getUserById = async (req, res) => {
         const user = await User.findById(_id);
         //this is to remove the password from the data and return newData
         const newData = Object.assign({}, user);
-        delete newData.password;
-        delete newData.email;
+        delete newData._doc.password;
+        delete newData._doc.email;
 
         res.status(200).json(newData._doc);
     } catch (error) {
@@ -32,7 +32,7 @@ export const getUserById = async (req, res) => {
 export const createUser = async (req, res) => {
     const options = {
         use_filename: true,
-        folder: "Blogify/Users",
+        folder: "Blogify/users",
         allowed_formats: ["jpg", "png", "jpeg"],
         quality: "auto:eco",
     };
@@ -42,14 +42,14 @@ export const createUser = async (req, res) => {
             username: req.body.username,
             email: req.body.email,
             password: req.body.password,
-            image: "null",
         });
 
         await user.validate();
 
-        const result = await cloudinary.v2.uploader.upload(req.file.path, options)
-
-        user.image = result.secure_url;
+        if(req.file) {
+            const result = await cloudinary.v2.uploader.upload(req.file.path, options)
+            user.image = result.secure_url;
+        }
 
         await user.save();
         const userFound = user;
@@ -108,7 +108,6 @@ export const fetchUserPosts = async (req, res) => {
     try {
         //this area get posts from user id 
         const user = req.params.id;
-        console.log(user);
         const posts = await Post.find({creator: user}).populate('creator', 'username');
         if(posts) {
             res.status(200).json(posts);
@@ -120,7 +119,25 @@ export const fetchUserPosts = async (req, res) => {
     }
 }
 
+export const followUser = async (req, res) => {
+    try {
+        const {id: _id} = req.params;
 
+        const user = req?.body;
+
+        //this area push the user id to the req params id followers array
+        const follow = await User.findByIdAndUpdate(_id, {$push: {followers: user._id}}, {new: true});
+
+        //this area push the req params id to the user id following array
+        const following = await User.findByIdAndUpdate(user._id, {$push: {following: _id}}, {new: true});
+
+        // console.log(following);
+        res.status(200).json(following);
+
+    } catch (error) {
+        res.status(409).json({ message: error.message });
+    }
+}
 
 
 export const updateUser = async (req, res) => {

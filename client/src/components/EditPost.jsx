@@ -35,8 +35,7 @@ const EditPost = ({post, closeEditMode}) => {
         formData.append("tag", data.tag);
         formData.append("content", data.content);
         formData.append("image", data.image.length > 0? data.image[0] : post.image);
-
-        formData.append("creator", post?.creator._id);
+        formData.append("creator", post.creator._id);
 
         setModalShow(true);
         

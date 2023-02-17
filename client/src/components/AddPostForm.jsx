@@ -96,19 +96,19 @@ const AddPostForm = () => {
           <Form.Group controlId="formFile" className="mb-3">
             <Form.Label>Blog Kapak Fotoğrafı</Form.Label>
             <br />
-            <Form.Control {...register("image", { required: true })} name="image" type="file" />
+            <Form.Control {...register("image")} name="image" type="file" />
           </Form.Group>
 
           <Button variant="primary" type="submit" className="mt-3">
             Yayınla
           </Button>
-          {error?.messages ? (
+          {error?.message ? (
             <PostsModal
               show={modalShow}
               onHide={() => setModalShow(false)}
               title="Hata"
               body="Post oluşturulamadı!"
-              description={error?.messages}
+              description={error?.message}
             />
           ):(
             <PostsModal
