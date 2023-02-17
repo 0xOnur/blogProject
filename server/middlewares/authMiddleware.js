@@ -41,7 +41,7 @@ const followUserAuth = async (req, res, next) => {
         const decoded = jwt.decode(token, process.env.JWT_SECRET);
 
 
-        const userId = req.body._id;
+        const userId = req.body.currentUserId;
 
         const targetFollow = req.params.id;
 
@@ -71,4 +71,40 @@ const followUserAuth = async (req, res, next) => {
     }
 }
 
-export { postDeleteAuth, followUserAuth };
+const unFollowUserAuth = async (req, res, next) => {
+    try {
+        const token = req.headers.authorization.split(" ")[1];
+        const decoded = jwt.decode(token, process.env.JWT_SECRET);
+
+        const userId = req.body.currentUserId;
+;
+
+        const targetUnFollow = req.params.id;
+
+        const userFollowingList = await User.findById(decoded._id).select("following");
+
+        if(token) {
+            jwt.verify(token, process.env.JWT_SECRET, (err) => {
+                if(err) {
+                    res.status(401).json({ message: "Token is not valid" });
+                }else {
+                    if(decoded._id === userId) {
+                        if(userFollowingList.following.includes(targetUnFollow)) {
+                            next();
+                        }else {
+                            res.status(401).json({ message: "You are not following this user" });
+                        }
+                    }else {
+                        res.status(401).json({ message: "You are not authorized to unfollow this user" });
+                    }
+                }
+            });
+        }else {
+            res.status(401).json({ message: "No token, authorization denied" });
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export { postDeleteAuth, followUserAuth, unFollowUserAuth };

@@ -5,7 +5,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import { Row,Col } from 'react-bootstrap';
 import {fetchUserPosts, getUserById} from '../../api/userApi';
 import UserCard from "./UserCard";
-import {followUser} from '../../api/userApi';
+import {followUser, unFollowUser} from '../../api/userApi';
 
 
 const Profile = () => {
@@ -15,10 +15,8 @@ const Profile = () => {
   
   useEffect(() => {
     dispatch(getUserById(id)).then((result) => {
-      console.log(result);
       if(result) {
         dispatch(fetchUserPosts(id)).then((result) => {
-          console.log(result);
         });
       }
     });
@@ -31,10 +29,17 @@ const Profile = () => {
 
   const currentUser = useSelector((state) => state?.user?.user?.userFound);
   
+  const currentUserId = currentUser?._id;
 
 
   const handleFollow = () => {
-    followUser({id: id, currentUser}).then((response) => {
+    followUser({id: id, currentUserId}).then((response) => {
+      dispatch(getUserById(id));
+    });
+  }
+
+  const handleUnFollow = () => {
+    unFollowUser({id: id, currentUserId}).then((response) => {
       dispatch(getUserById(id));
     });
   }
@@ -47,7 +52,7 @@ const Profile = () => {
           <Row style={{marginTop: '1rem'}}>
           {user?.username ? 
             (<>
-              <UserCard user={user} currentUser={currentUser} handleFollow={handleFollow} />
+              <UserCard user={user} currentUser={currentUser} handleFollow={handleFollow} handleUnFollow={handleUnFollow} />
               
               {posts?.length > 0 ? (
                 <>

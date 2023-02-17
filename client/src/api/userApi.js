@@ -89,8 +89,7 @@ export const deleteUser = createAsyncThunk(
     }
 );
 
-export const followUser = async ({id, currentUser}) => {
-    console.log(id, currentUser, 36);
+export const followUser = async ({id, currentUserId}) => {
     try {
         const config = {
             headers: {
@@ -99,13 +98,32 @@ export const followUser = async ({id, currentUser}) => {
             },
         };
 
-        const response = await axios.put(`${userEndpoint}${id}`, currentUser, config);
+        const response = await axios.put(`${userEndpoint}${id}`, {currentUserId}, config);
+        const data = response.data;
+        console.log(data);
+
+        return data;
+    } catch (error) {
+        return error;
+    }
+}
+
+export const unFollowUser = async ({id, currentUserId}) => {
+    try {
+        const config = {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                id: `${id}`
+            },
+        };
+
+        const response = await axios.put(`${userEndpoint}unfollow/${id}`, {currentUserId}, config);
         const data = response.data;
         return data;
     } catch (error) {
         return error;
     }
-} 
+}
 
 export const tokenIsExpired = async(token) => {
     if(token) {

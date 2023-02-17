@@ -1,7 +1,7 @@
 import React from "react";
 import { Row, Col, Image, Button } from "react-bootstrap";
 
-const UserCard = React.memo(({user, currentUser, handleFollow}) => {
+const UserCard = React.memo(({user, currentUser, handleFollow, handleUnFollow}) => {
   return (
     <>
       <Row className="justify-content-center mb-3">
@@ -15,15 +15,13 @@ const UserCard = React.memo(({user, currentUser, handleFollow}) => {
         {currentUser && (
           <>
             {currentUser._id === user._id ? (
-              <Button variant="outline-primary">Edit Profile</Button>
+              <Button variant="primary">Edit Profile</Button>
             ) : (
               <>
                 {user.followers.includes(currentUser._id) ? (
-                  <Button variant="outline-primary">Unfollow</Button>
+                  <Button onClick={handleUnFollow} variant="outline-primary">Unfollow</Button>
                 ) : (
-                  <Button onClick={handleFollow} variant="outline-primary">
-                    Follow
-                  </Button>
+                  <Button onClick={handleFollow} variant="primary">Follow</Button>
                 )}
               </>
             )}
@@ -33,8 +31,8 @@ const UserCard = React.memo(({user, currentUser, handleFollow}) => {
       </Row>
       <Row className="justify-content-center">
         <Col md="12" className="text-center">
-          <Button variant="outline-primary">Followers</Button>{" "}
-          <Button variant="outline-primary">Following</Button>
+          <Button variant="outline-primary">{user.followers.length} Followers</Button>{" "}
+          <Button variant="outline-primary">{user.following.length} Following</Button>
         </Col>
       </Row>
     </>

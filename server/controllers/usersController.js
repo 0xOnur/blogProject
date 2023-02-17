@@ -123,17 +123,29 @@ export const followUser = async (req, res) => {
     try {
         const {id: _id} = req.params;
 
-        const user = req?.body;
+        const user = req?.body?.currentUserId;
 
-        //this area push the user id to the req params id followers array
-        const follow = await User.findByIdAndUpdate(_id, {$push: {followers: user._id}}, {new: true});
+        await User.findByIdAndUpdate(_id, {$push: {followers: user}}, {new: true});
 
-        //this area push the req params id to the user id following array
-        const following = await User.findByIdAndUpdate(user._id, {$push: {following: _id}}, {new: true});
+        await User.findByIdAndUpdate(user, {$push: {following: _id}}, {new: true});
 
-        // console.log(following);
-        res.status(200).json(following);
+        res.status(200).json({message: "Success"});
+    } catch (error) {
+        res.status(409).json({ message: error.message });
+    }
+}
 
+export const unFollowUser = async (req, res) => {
+    try {
+        const {id: _id} = req.params;
+
+        const user = req?.body?.currentUserId;
+
+        await User.findByIdAndUpdate(_id, {$pull: {followers: user}}, {new: true});
+
+        await User.findByIdAndUpdate(user, {$pull: {following: _id}}, {new: true});
+
+        res.status(200).json({message: "Success"});
     } catch (error) {
         res.status(409).json({ message: error.message });
     }
