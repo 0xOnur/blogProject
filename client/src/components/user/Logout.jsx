@@ -32,8 +32,8 @@ const Logout = () => {
             {!user?.userFound && (
                 <UserModal
                     show={modalShow}
-                    title={"Başarılı"}
-                    body={"Çıkış yapıyorsunuz.."}
+                    title={"Success"}
+                    body={"You have been logged out."}
                     description={""}
                     onHide={() => setModalShow(false)}
                 />

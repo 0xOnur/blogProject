@@ -24,12 +24,10 @@ const Post = React.memo(({post}) => {
           <Card.Img style={{opacity:'0.7'}} width={"auto"} height={"auto"} variant="top" src={post.image || noImage} />
           <Card.Body>
           <Card.Text>{convertTime(post.created)}</Card.Text>
-            <Card.Text>Creator: <a href = {'/users/'+post.creator._id}>{post.creator?.username}</a></Card.Text>
+            <Card.Text>Creator: <a href = {'/users/'+post.creator?._id}>{post.creator?.username}</a></Card.Text>
             <Card.Text>#{post.tag}</Card.Text>
             <Card.Title>{post.title}</Card.Title>
-            <br />
-            <Card.Subtitle>{post.subTitle}</Card.Subtitle>
-            <br />
+         
             <Card.Text>
               {post.content?.substring(0,150)+'...'}
             </Card.Text>

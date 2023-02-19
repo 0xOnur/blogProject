@@ -14,17 +14,13 @@ const PostList = () => {
 
   
   useEffect(() => {
-
     //if tokenExpired return true logout
-
     tokenIsExpired(token).then((res) => {
       res === true && dispatch(logoutUser());
     })
-      
-      
   }, [dispatch, token])
-  
-  
+
+
   useEffect(() => {
     dispatch(fetchPosts());
   }, [dispatch]);

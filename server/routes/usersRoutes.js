@@ -17,7 +17,7 @@ import  {followUserAuth, unFollowUserAuth} from "../middlewares/authMiddleware.j
 
 const userRoutes = express.Router();
 
-const upload = multer({ dest: 'uploads/users/' })
+const upload = multer({storage: multer.diskStorage({})});
 
 //https://localhost:5000/users
 userRoutes.route('/login').post(loginUser);

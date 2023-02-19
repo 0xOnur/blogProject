@@ -73,16 +73,17 @@ function NAV() {
                           <Nav.Link href="/">
                             <MdHomeFilled /> Home
                           </Nav.Link>
-                          {user?.userFound && (
-                            <Nav.Link href="/posts/add">
-                              <MdOutlinePostAdd /> New Post
-                            </Nav.Link>
-                          )}
-                          {user?.userFound ? null : (
-                            <Nav.Link href="/login">
-                              <FaUserCircle> Login/Register</FaUserCircle>
-                            </Nav.Link>
-                          )}
+                          {user?.userFound ? (
+                              <Nav.Link href="/posts/add">
+                                <MdOutlinePostAdd /> New Post
+                              </Nav.Link>
+                            ):(
+                              <Nav.Link href="/login">
+                                <FaUserCircle /> Login/Register
+                              </Nav.Link>
+                            )
+                          }
+                    
                         </Nav>
                         <Form className="d-flex">
                           <Form.Control

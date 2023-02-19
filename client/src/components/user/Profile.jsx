@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import { useParams } from 'react-router-dom';
 import Post from "../Post";
 import {useSelector, useDispatch} from 'react-redux';
@@ -12,25 +12,25 @@ const Profile = () => {
   const {id} = useParams();
   const dispatch = useDispatch();
 
+  const [user, setUser] = useState(null);
+
+  const [posts, setPosts] = useState(null);
+
   
   useEffect(() => {
     dispatch(getUserById(id)).then((result) => {
       if(result) {
+        setUser(result.payload);
         dispatch(fetchUserPosts(id)).then((result) => {
+          setPosts(result.payload);
         });
       }
     });
   }, [dispatch, id]);
-  
-
-  const user = useSelector((state) => state?.user.userProfile);
-  
-  const posts = useSelector((state) => state?.user?.userPosts);
 
   const currentUser = useSelector((state) => state?.user?.user?.userFound);
   
   const currentUserId = currentUser?._id;
-
 
   const handleFollow = () => {
     followUser({id: id, currentUserId}).then((response) => {
@@ -43,8 +43,6 @@ const Profile = () => {
       dispatch(getUserById(id));
     });
   }
-
-  
 
   return (
       (

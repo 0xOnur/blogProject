@@ -22,8 +22,8 @@ const App = () => {
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
             <Route path="/users/:id" element={<Profile />} />
-
             <Route path="/logout" element={<Logout />} />
+            <Route path="*" element={<h1>404 NotFound</h1>} />
         </Route>
       </Routes>
     </div>

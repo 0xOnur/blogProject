@@ -72,25 +72,25 @@ const Register = () => {
                   <Form.Group className="mb-3" controlId="formUsername">
                         <Form.Label>Username</Form.Label>
                         <Form.Control {...register("username", { required: true })} type="text" placeholder="Enter Username" />
-                        {errors.username && <span>Bu alan zorunludur</span>}
+                        {errors.username && <span>username is required</span>}
                   </Form.Group>
 
                   <Form.Group className="mb-3" controlId="formMail">
                         <Form.Label>Mail</Form.Label>
                         <Form.Control {...register("email", { required: true })} type="email" placeholder="Enter Username" />
-                        {errors.email && <span>Bu alan zorunludur</span>}
+                        {errors.email && <span>email is required</span>}
                   </Form.Group>
 
                   <Form.Group className="mb-3" controlId="formPassword">
                         <Form.Label>Password</Form.Label>
                         <Form.Control {...register("password", { required: true })} type="password" placeholder="Enter Password" />
-                        {errors.password && <span>Bu alan zorunludur</span>}
+                        {errors.password && <span>enter password</span>}
                   </Form.Group>
 
                   <Form.Group controlId="formFile" className="mb-3">
-                        <Form.Label>Avatar Fotoğrafı</Form.Label>
+                        <Form.Label>Avatar</Form.Label>
                         <br />
-                        <Form.Control {...register("image", { required: true })} name="image" type="file" />
+                        <Form.Control {...register("image")} name="image" type="file" />
                   </Form.Group>
 
                   <Col className="form-header">
@@ -102,8 +102,8 @@ const Register = () => {
                         show={modalShow}
                         onHide={() => setModalShow(false)}
                         title="Hata"
-                        body={user.error.keyValue.email + " adresi zaten kayıtlı."}
-                        description="Lütfen başka bir mail adresi girin veya şifrenizi sıfırlayın."
+                        body={user.error.keyValue.email + " already exist"}
+                        description="Please try another email."
                       />
                     }
                     {user?.error?.keyValue?.username && 
@@ -111,8 +111,8 @@ const Register = () => {
                         show={modalShow}
                         onHide={() => setModalShow(false)}
                         title="Hata"
-                        body={user.error.keyValue.username + " zaten kayıtlı."}
-                        description="Lütfen başka bir kullanıcı adı seçin."
+                        body={user.error.keyValue.username + " already exist"}
+                        description="Please try another username."
                       />
                     }
 
@@ -130,13 +130,11 @@ const Register = () => {
                       <UserModal
                         show={modalShow}
                         onHide={() => setModalShow(false)}
-                        title="Başarılı"
-                        body={"Aramıza hoşgeldin " + user?.user?.userFound?.username}
-                        description=""
+                        title="Success"
+                        body={"Welcome " + user?.user?.userFound?.username}
+                        description="Redirecting to home page..."
                       />
                     }
-
-
                   </Col>
               </form>
             </Row>

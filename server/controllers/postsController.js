@@ -46,7 +46,7 @@ export const createPost = async (req, res) => {
         await newPost.validate();
 
         if(req.file) {
-            const result = await cloudinary.v2.uploader.upload(req.file.buffer, options);
+            const result = await cloudinary.v2.uploader.upload(req.file.path, options);
             newPost.image = result.secure_url;
         }
 

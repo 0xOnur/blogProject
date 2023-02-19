@@ -54,22 +54,22 @@ const Login = () => {
       <Container className="form-card">
         <Row>
           <Col md='12'>
-            <h1 className="form-header">Giriş Yap</h1>
+            <h1 className="form-header">Login</h1>
           </Col>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Col>
               <Form.Group className="mb-3" controlId="formMail">
                   <Form.Label>Mail</Form.Label>
-                  <Form.Control {...register("email", { required: true })} type="email" required placeholder="Enter Username" />
+                  <Form.Control {...register("email", { required: true })} type="email" required placeholder="Enter email" />
                   {user.error?.message === "User not found" && <UserModal
                     show={modalShow}
-                    title={"Hata"}
-                    body={"Kullanıcı Bulunamadı"}
-                    description={"Lütfen kayıt olunuz."}
+                    title={"Error"}
+                    body={"User not found"}
+                    description={"You can register"}
                     onHide={() => setModalShow(false)}
                   />}
                   
-                  {errors.email && <span>Lütfen bu alanı doldurun!</span>}
+                  {errors.email && <span>email is required</span>}
                 </Form.Group>
             </Col>
           
@@ -77,31 +77,31 @@ const Login = () => {
               <Form.Group className="mb-3" controlId="formPassword">
                   <Form.Label>Password</Form.Label>
                   <Form.Control  {...register("password", { required: true })} type="password" placeholder="Enter Password" />
-                  {errors.password && <span>Lütfen bu alanı doldurun!</span>}
+                  {errors.password && <span>enter password</span>}
                   {user.error?.message === "Wrong password" && <UserModal
                     show={modalShow}
-                    title={"Hata"}
-                    body={"Yanlış Şifre"}
-                    description={"Şifrenizi yenileyin"}
+                    title={"Error"}
+                    body={"Wrong password"}
+                    description={"Change your password or try again"}
                     onHide={() => setModalShow(false)}
                   />}
                 </Form.Group>
             </Col>
             {user.user.userFound ?( <UserModal
                     show={modalShow}
-                    title={"Giriş Başarılı"}
-                    body={"Merhaba " + user.user.userFound.username}
-                    description={"Anasayfaya yönlendiriliyorsunuz..."}
+                    title={"Success"}
+                    body={"Hello " + user.user.userFound.username}
+                    description={"You are logged in"}
                     onHide={() => setModalShow(false)}
                   />): (<></>)}
 
             <Col className="form-header">
-              <Button onClick={() => setModalShow(true)} type="submit" variant="primary">Giriş Yap</Button>{" "}
+              <Button onClick={() => setModalShow(true)} type="submit" variant="primary">Login</Button>{" "}
             </Col>
             <hr/>
             <Col md='12' className="form-header">
-              <h5>Hesabım Yok</h5>
-              <Button href="/register" variant="primary">Kayıt Ol</Button>
+              <h5>Don't have an account?</h5>
+              <Button href="/register" variant="primary">Register</Button>
             </Col>
           </form>
         </Row>
