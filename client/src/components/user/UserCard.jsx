@@ -1,7 +1,13 @@
-import React from "react";
+import React, {useState} from "react";
 import { Row, Col, Image, Button } from "react-bootstrap";
+import FollowCard from "./FollowCard";
 
 const UserCard = React.memo(({user, currentUser, handleFollow, handleUnFollow}) => {
+
+  const [showFollowers, setShowFollowers] = useState(false);
+  const [showFollowing, setShowFollowing] = useState(false);
+
+
   return (
     <>
       <Row className="justify-content-center mb-3">
@@ -31,10 +37,18 @@ const UserCard = React.memo(({user, currentUser, handleFollow, handleUnFollow}) 
       </Row>
       <Row className="justify-content-center">
         <Col md="12" className="text-center">
-          <Button variant="outline-primary">{user.followers.length} Followers</Button>{" "}
-          <Button variant="outline-primary">{user.following.length} Following</Button>
+          <Button onClick={()=> setShowFollowers(true)} variant="outline-primary">{user.followers.length} Followers</Button>{" "}
+          <Button onClick={()=> setShowFollowing(true)} variant="outline-primary">{user.following.length} Following</Button>
         </Col>
       </Row>
+
+      {showFollowers && (
+        <FollowCard user_id={user._id} modalTitle={"Followers"} show={showFollowers} onHide={() => setShowFollowers(false)} />
+      )}
+
+      {showFollowing && (
+        <FollowCard user_id={user._id}  modalTitle={"Following"} show={showFollowing} onHide={() => setShowFollowing(false)} />
+      )}
     </>
   );
 });

@@ -14,7 +14,7 @@ import {
 const tags = ["Fun", "Programming", "Health", "Science","Teknoloji"];
 
 
-const EditPost = ({post, closeEditMode}) => {
+const EditPost = React.memo(({post, closeEditMode}) => {
     const {register, handleSubmit, formState: { errors }} = useForm();
 
     const dispatch = useDispatch();
@@ -44,17 +44,17 @@ const EditPost = ({post, closeEditMode}) => {
             console.log("response: ", response);
             if(!response?.error) {
                 console.log("Post updated");
-                closeEditMode();
                 setTimeout(() => {
                     navigate(`/posts/${post._id}`);
+                    closeEditMode();
                 }, 3000);
+
             }else {
                 setModalShow(true);
             }
         })
     }
 
-    console.log("editPost render edildi");
     return (
         
         <>
@@ -64,7 +64,7 @@ const EditPost = ({post, closeEditMode}) => {
                     show={modalShow}
                     onHide={() => setModalShow(false)}
                     title="Loading..."
-                    body="Değişiklikler yükleniyor..."
+                    body="Loading changes..."
                 />
             )
             : (
@@ -72,17 +72,17 @@ const EditPost = ({post, closeEditMode}) => {
                     <Container className="mt-5">
                         <Form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
                             <Form.Group className="mb-3" controlId="formTitle">
-                                <Form.Label>Başlık</Form.Label>
+                                <Form.Label>Title</Form.Label>
                                 <Form.Control {...register("title", { required: true })} defaultValue={post?.title} type="text" required placeholder="Başlık" />
                             </Form.Group>
 
                             <Form.Group className="mb-3" controlId="formSubTitle">
-                                <Form.Label>Alt Başlık</Form.Label>
+                                <Form.Label>Subtitle</Form.Label>
                                 <Form.Control {...register("subTitle", { required: true })} defaultValue={post?.subTitle} type="text" placeholder="Alt Başlık" />
                             </Form.Group>
 
                             <Form.Group className="mb-3">
-                                <Form.Label>Konu Etiketi Seçin:</Form.Label>
+                                <Form.Label>Select topic</Form.Label>
                                 <Form.Select {...register("tag", { required: true })} defaultValue={post?.tag}  required>
                                 {tags.map((tag,index) => {
                                     return <option key={index} value={tag}>{tag}</option>
@@ -92,23 +92,23 @@ const EditPost = ({post, closeEditMode}) => {
 
                             <Form.Group className="mb-3">
                                 <InputGroup>
-                                <InputGroup.Text>İçeriği Giriniz</InputGroup.Text>
+                                <InputGroup.Text>Content</InputGroup.Text>
                                 <Form.Control {...register("content", { required: true })} defaultValue={post?.content} required as="textarea" aria-label="With textarea" />
                                 </InputGroup>
                             </Form.Group>
                             
                             <Form.Group controlId="formFile" className="mb-3">
-                                <Form.Label>Blog Kapak Fotoğrafı</Form.Label>
+                                <Form.Label>Blog Photo</Form.Label>
                                 <br />
                                 <Form.Control type="file" name="image" {...register("image")} />
                                 
                             </Form.Group>
 
                             <Button onClick={closeEditMode} variant="primary" className="mt-3">
-                                Vazgeç
+                                Cancel
                             </Button>{' '}
                             <Button variant="primary" type="submit" className="mt-3">
-                                Yayınla
+                                Publish
                             </Button>
                             {error?.message ? (
                                 <PostsModal 
@@ -135,6 +135,6 @@ const EditPost = ({post, closeEditMode}) => {
         
         </>  
     )
-}
+})
 
 export default EditPost

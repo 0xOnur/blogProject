@@ -57,6 +57,7 @@ export const getUserById = createAsyncThunk(
     }
 );
 
+
 export const createUser = createAsyncThunk(
     "createUser",
     async (userData, { rejectWithValue }) => {
@@ -124,6 +125,27 @@ export const unFollowUser = async ({id, currentUserId}) => {
         return error;
     }
 }
+
+export const getFollowers = async (id) => {
+    try {
+        const response = await axios.get(`${userEndpoint}${id}/followers`);
+        const data = response.data;
+        return data;
+    } catch (error) {
+        return error;
+    }
+}
+
+export const getFollowing = async (id) => {
+    try {
+        const response = await axios.get(`${userEndpoint}${id}/following`);
+        const data = response.data;
+        return data;
+    } catch (error) {
+        return error;
+    }
+}
+
 
 export const tokenIsExpired = async(token) => {
     if(token) {

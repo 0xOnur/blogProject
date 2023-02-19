@@ -20,11 +20,11 @@ const Post = React.memo(({post}) => {
         }
       `}
       </style>
-        <Card style={{ width: '20rem'}} className="bg-dark text-white postCard">
-          <Card.Img style={{opacity:'0.6'}} variant="top" src={post.image || noImage} />
+        <Card style={{ width: '100%', height:'auto'}} className="bg-dark text-white postCard">
+          <Card.Img style={{opacity:'0.7'}} width={"auto"} height={"auto"} variant="top" src={post.image || noImage} />
           <Card.Body>
           <Card.Text>{convertTime(post.created)}</Card.Text>
-            <Card.Text>Yazar: <a href = {'/users/'+post.creator._id}>{post.creator?.username}</a></Card.Text>
+            <Card.Text>Creator: <a href = {'/users/'+post.creator._id}>{post.creator?.username}</a></Card.Text>
             <Card.Text>#{post.tag}</Card.Text>
             <Card.Title>{post.title}</Card.Title>
             <br />
@@ -33,7 +33,7 @@ const Post = React.memo(({post}) => {
             <Card.Text>
               {post.content?.substring(0,150)+'...'}
             </Card.Text>
-            <Button variant="primary"><Link style={{color:"white", textDecoration:"none"}} to={`/posts/${post._id}`}>Daha fazla..</Link></Button>
+            <Button variant="primary"><Link style={{color:"white", textDecoration:"none"}} to={`/posts/${post._id}`}>More..</Link></Button>
           </Card.Body>
         </Card>
     </>

@@ -1,8 +1,6 @@
 import Post from "../models/postsModel.js";
 import User from "../models/usersModel.js";
 import cloudinary from "cloudinary";
-import fs from "fs";
-
 
 export const getPosts = async (req, res) => {
     try {

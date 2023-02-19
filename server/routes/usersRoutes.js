@@ -1,6 +1,17 @@
 import express from "express";
 import multer from "multer";
-import { getUsers, fetchUserPosts, followUser, unFollowUser, createUser, getUserById, loginUser, deleteUser, updateUser } from "../controllers/usersController.js";
+import { getUsers, 
+    fetchUserPosts, 
+    followUser, 
+    getFollowers,
+    getFollowing,
+    unFollowUser, 
+    createUser, 
+    getUserById, 
+    loginUser, 
+    deleteUser, 
+    updateUser 
+} from "../controllers/usersController.js";
 
 import  {followUserAuth, unFollowUserAuth} from "../middlewares/authMiddleware.js";
 
@@ -17,6 +28,9 @@ userRoutes.get("/", getUsers);
 userRoutes.get("/:id", getUserById);
 userRoutes.put("/:id", followUserAuth, followUser);
 userRoutes.put("/unfollow/:id", unFollowUserAuth, unFollowUser);
+
+userRoutes.get("/:id/followers", getFollowers);
+userRoutes.get("/:id/following", getFollowing);
 
 userRoutes.get("/:id/posts", fetchUserPosts);
 

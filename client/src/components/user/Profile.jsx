@@ -63,10 +63,10 @@ const Profile = () => {
                   )}
                 </>
               ):
-                <h4 className='text-center mt-5'>Henüz post yok</h4>
+                <h4 className='text-center mt-5'>No posts yet</h4>
               }
             </>)
-            : <h1 className='text-center mt-5'>Kullanıcı bulunamadı</h1>}
+            : <h1 className='text-center mt-5'>User not found</h1>}
           </Row>
         </div>
       )

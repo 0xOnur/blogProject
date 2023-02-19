@@ -151,6 +151,28 @@ export const unFollowUser = async (req, res) => {
     }
 }
 
+export const getFollowers = async (req, res) => {
+    try {
+        const {id: _id} = req.params;
+
+        const user = await User.findById(_id).populate("followers", "username image");
+
+        res.status(200).json(user.followers);
+    } catch (error) {
+        res.status(409).json({ message: error.message });
+    }
+}
+
+export const getFollowing = async (req, res) => {
+    try {
+        const {id: _id} = req.params;
+        const user = await User.findById(_id).populate("following", "username image");
+
+        res.status(200).json(user.following);
+    } catch (error) {
+        res.status(409).json({ message: error.message });
+    }
+}
 
 export const updateUser = async (req, res) => {
     const {id: _id} = req.params;

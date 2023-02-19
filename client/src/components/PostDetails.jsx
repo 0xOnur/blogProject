@@ -99,12 +99,12 @@ const PostDetails = () => {
                   <>
                   <Col md="12 mb-3">
                     <Button onClick={openEditMode} className="" variant="secondary">
-                      Düzenle <FaRegEdit />
+                      Edit <FaRegEdit />
                     </Button>
                   </Col>
                   <Col md="12 mb-3">
                     <Button onClick={removePost} variant="danger">
-                      Sil <FaTrash />
+                      Delete <FaTrash />
                     </Button>
                   </Col>
                 </>)

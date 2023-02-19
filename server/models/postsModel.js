@@ -3,19 +3,19 @@ import mongoose from "mongoose";
 const postSchema = mongoose.Schema({
     title: {
         type: String,
-        required: [true, "Lütfen başlık girin. "],
+        required: [true, "Please enter title."],
     },
     subTitle: {
         type: String,
     },
     content: {
         type: String,
-        required: [true, "Lütfen içerik girin."],
-        minlength: [10, "İçerik en az 10 karakterden oluşmalıdır. "],
+        required: [true, "Please enter content."],
+        minlength: [10, "Content must be at least 10 characters long. "],
     },
     tag: {
         type: String,
-        required: [true, "Lütfen bir kategori seçin. "],
+        required: [true, "Select topic. "],
     },
     image: String,
     imageId: String,

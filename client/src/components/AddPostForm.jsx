@@ -68,17 +68,17 @@ const AddPostForm = () => {
     <Container className="mt-5">
         <Form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
           <Form.Group className="mb-3" controlId="formTitle">
-            <Form.Label>Başlık</Form.Label>
+            <Form.Label>Title</Form.Label>
             <Form.Control {...register("title", { required: true })} type="text" placeholder="Başlık" />
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formSubTitle">
-            <Form.Label>Alt Başlık</Form.Label>
+            <Form.Label>Subtitle</Form.Label>
             <Form.Control {...register("subTitle", { required: true })}  type="text" placeholder="Alt Başlık" />
           </Form.Group>
 
           <Form.Group className="mb-3">
-            <Form.Label>Konu Etiketi Seçin:</Form.Label>
+            <Form.Label>Select topic</Form.Label>
             <Form.Select {...register("tag", { required: true })}>
               {tags.map((tag,index) => {
                 return <option key={index} value={tag}>{tag}</option>
@@ -88,35 +88,35 @@ const AddPostForm = () => {
 
           <Form.Group className="mb-3">
             <InputGroup>
-              <InputGroup.Text>İçeriği Giriniz</InputGroup.Text>
+              <InputGroup.Text>Content</InputGroup.Text>
               <Form.Control {...register("content", { required: true })} as="textarea" aria-label="With textarea" />
             </InputGroup>
           </Form.Group>
           
           <Form.Group controlId="formFile" className="mb-3">
-            <Form.Label>Blog Kapak Fotoğrafı</Form.Label>
+            <Form.Label>Blog Photo</Form.Label>
             <br />
             <Form.Control {...register("image")} name="image" type="file" />
           </Form.Group>
 
           <Button variant="primary" type="submit" className="mt-3">
-            Yayınla
+            Create
           </Button>
           {error?.message ? (
             <PostsModal
               show={modalShow}
               onHide={() => setModalShow(false)}
-              title="Hata"
-              body="Post oluşturulamadı!"
+              title="Error"
+              body="Post not created!"
               description={error?.message}
             />
           ):(
             <PostsModal
               show={modalShow}
               onHide={() => setModalShow(false)}
-              title="Başarılı"
-              body="Post oluşturuldu!"
-              description="Post'a yönlendiriliyorsunuz.."
+              title="Success"
+              body="Post created!"
+              description="Redirecting to post.."
             />
           )}
         </Form>
