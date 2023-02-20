@@ -27,7 +27,7 @@ const rootReducer = combineReducers({
         {
           key: 'user',
           storage: storage,
-          blacklist: ['error'],
+          blacklist: ['error', 'isPending', 'userPosts', 'userProfile'],
         },
         userReducer,
       ),

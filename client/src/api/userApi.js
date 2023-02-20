@@ -101,7 +101,6 @@ export const followUser = async ({id, currentUserId}) => {
 
         const response = await axios.put(`${userEndpoint}${id}`, {currentUserId}, config);
         const data = response.data;
-        console.log(data);
 
         return data;
     } catch (error) {

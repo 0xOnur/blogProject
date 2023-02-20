@@ -16,7 +16,6 @@ const Profile = () => {
 
   const [posts, setPosts] = useState(null);
 
-  
   useEffect(() => {
     dispatch(getUserById(id)).then((result) => {
       if(result) {
@@ -34,13 +33,17 @@ const Profile = () => {
 
   const handleFollow = () => {
     followUser({id: id, currentUserId}).then((response) => {
-      dispatch(getUserById(id));
+      dispatch(getUserById(id)).then((user) => {
+        setUser(user.payload);
+      });
     });
   }
 
   const handleUnFollow = () => {
     unFollowUser({id: id, currentUserId}).then((response) => {
-      dispatch(getUserById(id));
+      dispatch(getUserById(id)).then((user) => {
+      setUser(user.payload);
+      });
     });
   }
 

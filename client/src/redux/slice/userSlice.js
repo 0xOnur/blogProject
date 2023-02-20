@@ -49,6 +49,9 @@ export const userSlice = createSlice({
         [api.createUser.pending]: (state) => {
             state.error = null;
         },
+        [api.createUser.fulfilled]: (state, action) => {
+            state.user = action.payload;
+        },
         [api.updateUser.fulfilled]: (state, action) => {
             state.user = action.payload;
         },

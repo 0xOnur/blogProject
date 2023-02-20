@@ -54,6 +54,7 @@ export const createUser = async (req, res) => {
         await user.save();
         const userFound = user;
         const token = generateToken(userFound._id.toString());
+        console.log(userFound, token);
         res.status(201).json({
             userFound,
             token: token
