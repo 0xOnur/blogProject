@@ -74,10 +74,22 @@ export const createUser = createAsyncThunk(
 
 export const updateUser = createAsyncThunk(
     "updateUser",
-    async ({ id, userData }, _) => {
-        const response = await axios.put(`${userEndpoint}${id}`, userData);
-        const data = response.data;
-        return data;
+    async ({ id, userData}, {rejectWithValue}, _) => {
+        try {
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    id: `${id}`
+                },
+            };
+
+            const response = await axios.put(`${userEndpoint}${id}`, userData, config);
+            const userFound = response.data;
+            const token = localStorage.getItem('token');
+            return { userFound, token };
+        }catch (error){
+            return rejectWithValue(error.response.data);
+        }
     }
 );
 
@@ -99,7 +111,7 @@ export const followUser = async ({id, currentUserId}) => {
             },
         };
 
-        const response = await axios.put(`${userEndpoint}${id}`, {currentUserId}, config);
+        const response = await axios.put(`${userEndpoint}follow/${id}`, {currentUserId}, config);
         const data = response.data;
 
         return data;

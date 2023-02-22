@@ -6,6 +6,7 @@ const initialState = {
     //there is any user profile
     userProfile: null,
     //
+    isPending: false,
     userPosts: [],
     error: null
 }
@@ -54,6 +55,14 @@ export const userSlice = createSlice({
         },
         [api.updateUser.fulfilled]: (state, action) => {
             state.user = action.payload;
+            state.isPending = false;
+        },
+        [api.updateUser.pending]: (state) => {
+            state.isPending = true;
+        },
+        [api.updateUser.rejected]: (state, action) => {
+            state.isPending = false;
+            state.error = action.payload;
         },
         [api.deleteUser.fulfilled]: (state, action) => {
             state.user = action.payload;

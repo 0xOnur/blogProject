@@ -16,6 +16,10 @@ const Profile = () => {
 
   const [posts, setPosts] = useState(null);
 
+  const currentUser = useSelector((state) => state?.user?.user?.userFound);
+  
+  const currentUserId = currentUser?._id;
+
   useEffect(() => {
     dispatch(getUserById(id)).then((result) => {
       if(result) {
@@ -25,11 +29,7 @@ const Profile = () => {
         });
       }
     });
-  }, [dispatch, id]);
-
-  const currentUser = useSelector((state) => state?.user?.user?.userFound);
-  
-  const currentUserId = currentUser?._id;
+  }, [dispatch, id, currentUser]);
 
   const handleFollow = () => {
     followUser({id: id, currentUserId}).then((response) => {
@@ -46,6 +46,8 @@ const Profile = () => {
       });
     });
   }
+
+  
 
   return (
       (
@@ -69,6 +71,7 @@ const Profile = () => {
             </>)
             : <h1 className='text-center mt-5'>User not found</h1>}
           </Row>
+          
         </div>
       )
   )

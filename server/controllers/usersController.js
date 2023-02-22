@@ -176,11 +176,47 @@ export const getFollowing = async (req, res) => {
 }
 
 export const updateUser = async (req, res) => {
-    const {id: _id} = req.params;
-    const user = req.body;
+    const options = {
+        use_filename: true,
+        folder: "Blogify/users",
+        allowed_formats: ["jpg", "png", "jpeg"],
+        quality: "auto:eco",
+    };
+    
     try {
-        const updatedUser = await User.findByIdAndUpdate(_id, user, {new: true});
-        res.json(updatedUser);
+        const {id: _id} = req.params;
+        const user = {
+            _id: _id,
+            username: req.body.username,
+            image: req.body.image,
+            imageId: req.body.imageId,
+        };
+
+        if(req.file) {
+            const result = await cloudinary.v2.uploader.upload(req.file.path, options)
+            user.image = result.secure_url;
+            user.imageId = result.public_id;
+
+            if(req.body.imageId) {
+                //this area remove the old avatar from cloudinary
+                const oldUser = await User.findById(_id);
+                const oldImage = oldUser.imageId;
+
+                cloudinary.uploader.destroy(oldImage, {invalidate: true});
+            }
+        }
+
+        //this area check username is already exist or not
+        const userFound = await User.findOne({ username: user.username });
+        
+        if(userFound?._id.toString() === _id || userFound === null) {
+            const updatedUser = await User.findByIdAndUpdate(_id, user, {new: true});
+            res.status(200).json(updatedUser);
+        } 
+        else {
+            res.status(409).json({ message: "Username already exist" });
+        }
+
     } catch (error) {
         res.status(409).json({ message: error.message });
     }

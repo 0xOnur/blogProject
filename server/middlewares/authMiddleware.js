@@ -77,7 +77,7 @@ const unFollowUserAuth = async (req, res, next) => {
         const decoded = jwt.decode(token, process.env.JWT_SECRET);
 
         const userId = req.body.currentUserId;
-;
+
 
         const targetUnFollow = req.params.id;
 
@@ -107,4 +107,34 @@ const unFollowUserAuth = async (req, res, next) => {
     }
 }
 
-export { postDeleteAuth, followUserAuth, unFollowUserAuth };
+const updateUserAuth = async (req, res, next) => {
+    try {
+        const id = req.params.id;
+
+        const token = req.headers.authorization.split(" ")[1];
+        const decoded = jwt.decode(token, process.env.JWT_SECRET);
+
+        if(token) {
+            jwt.verify(token, process.env.JWT_SECRET, (err) => {
+                if(err) {
+                    res.status(401).json({ message: "Token is not valid" });
+                }else {
+                    if(decoded._id === id) {
+                        next();
+                    }else {
+                        res.status(401).json({ message: "You are not authorized to update this user" });
+                    }
+                }
+            });
+        }else {
+            res.status(401).json({ message: "No token, authorization denied" });
+        }
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+        
+
+export { postDeleteAuth, followUserAuth, unFollowUserAuth, updateUserAuth };

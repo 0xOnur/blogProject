@@ -1,12 +1,16 @@
 import React, {useState} from "react";
 import { Row, Col, Image, Button } from "react-bootstrap";
 import FollowCard from "./FollowCard";
+import EditProfile from "./EditProfile";
 
 const UserCard = React.memo(({user, currentUser, handleFollow, handleUnFollow}) => {
 
   const [showFollowers, setShowFollowers] = useState(false);
   const [showFollowing, setShowFollowing] = useState(false);
 
+  const [editProfile, setEditProfile] = useState(false);
+
+  const closeEditProfile = () => {setEditProfile(false)};
 
   return (
     <>
@@ -21,7 +25,11 @@ const UserCard = React.memo(({user, currentUser, handleFollow, handleUnFollow}) 
         {currentUser && (
           <>
             {currentUser._id === user._id ? (
-              <Button variant="primary">Edit Profile</Button>
+              <>
+              <Button variant="primary" onClick={()=> setEditProfile(true)}>Edit Profile</Button>
+              {editProfile && <EditProfile show={editProfile} handleclose={closeEditProfile} />}
+              </>
+
             ) : (
               <>
                 {user.followers.includes(currentUser._id) ? (

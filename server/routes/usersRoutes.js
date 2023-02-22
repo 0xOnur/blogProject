@@ -13,7 +13,7 @@ import { getUsers,
     updateUser 
 } from "../controllers/usersController.js";
 
-import  {followUserAuth, unFollowUserAuth} from "../middlewares/authMiddleware.js";
+import  {followUserAuth, unFollowUserAuth, updateUserAuth} from "../middlewares/authMiddleware.js";
 
 const userRoutes = express.Router();
 
@@ -22,11 +22,11 @@ const upload = multer({storage: multer.diskStorage({})});
 //https://localhost:5000/users
 userRoutes.route('/login').post(loginUser);
 
-userRoutes.post("/register", upload.single('image'), createUser);
 
 userRoutes.get("/", getUsers);
 userRoutes.get("/:id", getUserById);
-userRoutes.put("/:id", followUserAuth, followUser);
+
+userRoutes.put("/follow/:id", followUserAuth, followUser);
 userRoutes.put("/unfollow/:id", unFollowUserAuth, unFollowUser);
 
 userRoutes.get("/:id/followers", getFollowers);
@@ -34,7 +34,9 @@ userRoutes.get("/:id/following", getFollowing);
 
 userRoutes.get("/:id/posts", fetchUserPosts);
 
-userRoutes.put("/:id", updateUser);
+userRoutes.post("/register", upload.single('image'), createUser);
+userRoutes.put("/:id", upload.single('image'), updateUserAuth, updateUser);
+
 userRoutes.delete("/:id", deleteUser);
 
 export default userRoutes;

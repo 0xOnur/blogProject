@@ -26,6 +26,9 @@ const userSchema = mongoose.Schema(
             type: String,
             default: "https://res.cloudinary.com/dwcw9iftp/image/upload/v1676581806/Blogify/users/user_318-790139_kkrcfr.avif",
         },
+        imageId: {
+            type: String,
+        },
         role: {
             type: String,
             enum: ["user", "admin"],

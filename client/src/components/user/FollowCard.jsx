@@ -41,14 +41,14 @@ const FollowCard = ({user_id, modalTitle, show, onHide}) => {
             followers.map((follower) => (
               <ListGroupItem key={follower._id}>
                 <Image alt="" width={40} height={40} src={follower.image} roundedCircle />{' '}
-                {follower.username}
+                <a href={"/users/"+follower._id}>{follower.username}</a>
               </ListGroupItem>
             ))
         ):(
             following.map((follower) => (
               <ListGroupItem key={follower._id}>
                 <Image alt="" width={40} height={40} src={follower.image} roundedCircle />{' '}
-                {follower.username}
+                <a href={"/users/"+follower._id}>{follower.username}</a>
               </ListGroupItem>
             ))
         )}
