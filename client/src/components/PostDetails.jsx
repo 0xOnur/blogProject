@@ -8,6 +8,7 @@ import noImage from "../images/noimage.svg";
 import { fetchSinglePost, deletePost } from "../api/postsApi";
 import { fetchSingleUser } from "../api/userApi";
 import EditPost from "./EditPost";
+import PostsModal from "./postsModal";
 
 const PostDetails = () => {
   const { id } = useParams();
@@ -17,32 +18,40 @@ const PostDetails = () => {
 
   const currentPost = useSelector((state) => state.post.currentPost);
 
+  const error = useSelector((state) => state.post.error);
 
   const currentUser = useSelector((state) => state.user.user);
-  
 
   const [editMode, setEditMode] = useState(false);
 
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
-    dispatch(fetchSinglePost(id))
+    dispatch(fetchSinglePost(id));
   }, [dispatch, id, editMode]);
-  
 
   const convertTime = useCallback((time) => {
     return moment(time).fromNow();
   }, []);
 
   const removePost = () => {
-    dispatch(deletePost(id)).then(() => {
-      //this area getUserById dispatch for update user's posts in redux store
-      console.log(currentUser.userFound._id);
-      dispatch(fetchSingleUser(currentUser.userFound._id))
-      setTimeout(() => {
-        navigate("/");
-      }, 1000);
+    dispatch(deletePost(id)).then((response) => {
+      console.log(response);
+      if (response?.error) {
+        setShow(true);
+        
+      }else {
+        //this area getUserById dispatch for update user's posts in redux store
+        setShow(true);
+        dispatch(fetchSingleUser(currentUser.userFound._id));
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
+      }
     });
   };
+
+  const handleClose = () => setShow(false);
 
   const openEditMode = () => {
     setEditMode(true);
@@ -81,49 +90,71 @@ const PostDetails = () => {
         }
       `}
       </style>
+      {error?.message ? (
+        <PostsModal
+          onHide={handleClose}
+          show={show}
+          title={"Error"}
+          body={error.message}
+        />
+      ) : (
+        <PostsModal
+          onHide={handleClose}
+          show={show}
+          title="Post deleted"
+          body="Post deleted successfully"
+        />
+      )}
 
       {currentPost ? (
         <>
           {editMode ? (
             <EditPost post={currentPost} closeEditMode={closeEditMode} />
-          ):(
+          ) : (
             <div className="container post-content mt-5">
               <Row>
                 <Col md="12">
                   <h3>{currentPost?.title}</h3>
                   <h5>{currentPost?.subTitle}</h5>
                 </Col>
-
-
-              {currentUser.userFound &&(currentUser?.userFound?._id === currentPost?.creator?._id && (
+                {currentUser?.userFound?._id === currentPost?.creator?._id && (
                   <>
-                  <Col md="12 mb-3">
-                    <Button onClick={openEditMode} className="" variant="secondary">
-                      Edit <FaRegEdit />
-                    </Button>
-                  </Col>
-                  <Col md="12 mb-3">
-                    <Button onClick={removePost} variant="danger">
-                      Delete <FaTrash />
-                    </Button>
-                  </Col>
-                </>)
-                
-              )}
+                    <Col md="12 mb-3">
+                      <Button
+                        onClick={openEditMode}
+                        className=""
+                        variant="secondary"
+                      >
+                        Edit <FaRegEdit />
+                      </Button>
+                    </Col>
+                    <Col md="12 mb-3">
+                      <Button onClick={removePost} variant="danger">
+                        Delete <FaTrash />
+                      </Button>
+                    </Col>
+                  </>
+                )}
                 <hr />
               </Row>
 
               <Row>
                 <Col md="12">
                   <h6>
-                    {convertTime(currentPost?.created)} 
-                    <a href={"/users/"+currentPost.creator._id}> {currentPost?.creator?.username}</a>
+                    {convertTime(currentPost?.created)}
+                    <a href={"/users/" + currentPost.creator._id}>
+                      {" "}
+                      {currentPost?.creator?.username}
+                    </a>
                   </h6>
                 </Col>
                 <Col md="12">
                   <h6>
                     Last update: {convertTime(currentPost?.updated)}{" "}
-                    <a href={"/users/"+currentPost.creator._id}> {currentPost?.creator?.username}</a>
+                    <a href={"/users/" + currentPost.creator._id}>
+                      {" "}
+                      {currentPost?.creator?.username}
+                    </a>
                   </h6>
                 </Col>
                 <Col md="12">
@@ -143,13 +174,12 @@ const PostDetails = () => {
             </div>
           )}
         </>
-      ):(
+      ) : (
         <div className="post-content">
           <h4>404 Post not found</h4>
           <p>Post not found or deleted</p>
         </div>
-      )
-      }
+      )}
     </>
   );
 };

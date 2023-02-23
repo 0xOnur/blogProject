@@ -15,7 +15,12 @@ export const createPost = createAsyncThunk(
     'createPost',
     async (postData, {rejectWithValue}) => {
         try {
-            const response = await axios.post(`${postsEndpoint}`, postData);
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+            };
+            const response = await axios.post(`${postsEndpoint}`, postData, config);
             const data = response.data;
             return data;
         } catch (error) {
@@ -28,7 +33,12 @@ export const updatePost = createAsyncThunk(
     'updatePost',
     async ({id, formData}, {rejectWithValue}, _) => {
         try {
-            const response = await axios.put(`${postsEndpoint}${id}`, formData);
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+            };
+            const response = await axios.put(`${postsEndpoint}${id}`, formData, config);
             const data = response.data;
             return data;
         } catch (error) {
@@ -44,7 +54,6 @@ export const deletePost = createAsyncThunk(
             const config = {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
-                    id: `${id}`
                 },
             };
             const response = await axios.delete(`${postsEndpoint}${id}`, config);

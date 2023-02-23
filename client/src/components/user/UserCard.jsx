@@ -26,8 +26,8 @@ const UserCard = React.memo(({user, currentUser, handleFollow, handleUnFollow}) 
           <>
             {currentUser._id === user._id ? (
               <>
-              <Button variant="primary" onClick={()=> setEditProfile(true)}>Edit Profile</Button>
-              {editProfile && <EditProfile show={editProfile} handleclose={closeEditProfile} />}
+                <Button variant="primary" onClick={()=> setEditProfile(true)}>Edit Profile</Button>
+                {editProfile && <EditProfile show={editProfile} handleclose={closeEditProfile} />}
               </>
 
             ) : (

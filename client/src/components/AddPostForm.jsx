@@ -37,7 +37,6 @@ const AddPostForm = () => {
 
   const onSubmit = (data)=> {
 
-    console.log("data: ", data);
     const formData = new FormData();
     
     formData.append("title", data.title);

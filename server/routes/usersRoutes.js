@@ -13,7 +13,7 @@ import { getUsers,
     updateUser 
 } from "../controllers/usersController.js";
 
-import  {followUserAuth, unFollowUserAuth, updateUserAuth} from "../middlewares/authMiddleware.js";
+import  authMiddleware from "../middlewares/authMiddleware.js";
 
 const userRoutes = express.Router();
 
@@ -26,8 +26,8 @@ userRoutes.route('/login').post(loginUser);
 userRoutes.get("/", getUsers);
 userRoutes.get("/:id", getUserById);
 
-userRoutes.put("/follow/:id", followUserAuth, followUser);
-userRoutes.put("/unfollow/:id", unFollowUserAuth, unFollowUser);
+userRoutes.put("/follow/:id", authMiddleware, followUser);
+userRoutes.put("/unfollow/:id", authMiddleware, unFollowUser);
 
 userRoutes.get("/:id/followers", getFollowers);
 userRoutes.get("/:id/following", getFollowing);
@@ -35,7 +35,7 @@ userRoutes.get("/:id/following", getFollowing);
 userRoutes.get("/:id/posts", fetchUserPosts);
 
 userRoutes.post("/register", upload.single('image'), createUser);
-userRoutes.put("/:id", upload.single('image'), updateUserAuth, updateUser);
+userRoutes.put("/:id", upload.single('image'), authMiddleware, updateUser);
 
 userRoutes.delete("/:id", deleteUser);
 

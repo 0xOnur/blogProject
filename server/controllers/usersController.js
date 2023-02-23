@@ -122,15 +122,29 @@ export const fetchUserPosts = async (req, res) => {
 
 export const followUser = async (req, res) => {
     try {
+        const token  = req.headers.authorization.split(" ")[1];
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decodedToken._id;
+
         const {id: _id} = req.params;
 
         const user = req?.body?.currentUserId;
 
-        await User.findByIdAndUpdate(_id, {$push: {followers: user}}, {new: true});
+        const userFollowingList = await User.findById(userId).select("following");
 
-        await User.findByIdAndUpdate(user, {$push: {following: _id}}, {new: true});
+        if(userId === user) {
+            if(userFollowingList.following.includes(_id)) {
+                res.status(409).json({ message: "You are already following this user" });
+            }else {
+                await User.findByIdAndUpdate(_id, {$push: {followers: user}}, {new: true});
 
-        res.status(200).json({message: "Success"});
+                await User.findByIdAndUpdate(user, {$push: {following: _id}}, {new: true});
+        
+                res.status(200).json({message: "Success"});
+            }
+        }else {
+            res.status(409).json({ message: "You are not authorized to do this" });
+        }
     } catch (error) {
         res.status(409).json({ message: error.message });
     }
@@ -138,15 +152,29 @@ export const followUser = async (req, res) => {
 
 export const unFollowUser = async (req, res) => {
     try {
+        const token  = req.headers.authorization.split(" ")[1];
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decodedToken._id;
+        
         const {id: _id} = req.params;
 
         const user = req?.body?.currentUserId;
 
-        await User.findByIdAndUpdate(_id, {$pull: {followers: user}}, {new: true});
+        const userFollowingList = await User.findById(userId).select("following");
 
-        await User.findByIdAndUpdate(user, {$pull: {following: _id}}, {new: true});
+        if(userId === user) {
+            if(userFollowingList.following.includes(_id)) {
+                await User.findByIdAndUpdate(_id, {$pull: {followers: user}}, {new: true});
 
-        res.status(200).json({message: "Success"});
+                await User.findByIdAndUpdate(user, {$pull: {following: _id}}, {new: true});
+        
+                res.status(200).json({message: "Success"});
+            }else {
+                res.status(409).json({ message: "You are not following this user" });
+            }
+        }else {
+            res.status(409).json({ message: "You are not authorized to do this" });
+        }
     } catch (error) {
         res.status(409).json({ message: error.message });
     }
@@ -182,41 +210,49 @@ export const updateUser = async (req, res) => {
         allowed_formats: ["jpg", "png", "jpeg"],
         quality: "auto:eco",
     };
+
+    const token  = req.headers.authorization.split(" ")[1];
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decodedToken._id;
     
     try {
         const {id: _id} = req.params;
-        const user = {
-            _id: _id,
-            username: req.body.username,
-            image: req.body.image,
-            imageId: req.body.imageId,
-        };
 
-        if(req.file) {
-            const result = await cloudinary.v2.uploader.upload(req.file.path, options)
-            user.image = result.secure_url;
-            user.imageId = result.public_id;
-
-            if(req.body.imageId) {
-                //this area remove the old avatar from cloudinary
-                const oldUser = await User.findById(_id);
-                const oldImage = oldUser.imageId;
-
-                cloudinary.uploader.destroy(oldImage, {invalidate: true});
+        if(userId === _id) {
+            const user = {
+                _id: _id,
+                username: req.body.username,
+                image: req.body.image,
+                imageId: req.body.imageId,
+            };
+    
+            if(req.file) {
+                const result = await cloudinary.v2.uploader.upload(req.file.path, options)
+                user.image = result.secure_url;
+                user.imageId = result.public_id;
+    
+                if(req.body.imageId) {
+                    //this area remove the old avatar from cloudinary
+                    const oldUser = await User.findById(_id);
+                    const oldImage = oldUser.imageId;
+    
+                    cloudinary.uploader.destroy(oldImage, {invalidate: true});
+                }
             }
+    
+            //this area check username is already exist or not
+            const userFound = await User.findOne({ username: user.username });
+            
+            if(userFound?._id.toString() === _id || userFound === null) {
+                const updatedUser = await User.findByIdAndUpdate(_id, user, {new: true});
+                res.status(200).json(updatedUser);
+            } 
+            else {
+                res.status(409).json({ message: "Username already exist" });
+            }
+        }else {
+            res.status(409).json({ message: "You can't update other user" });
         }
-
-        //this area check username is already exist or not
-        const userFound = await User.findOne({ username: user.username });
-        
-        if(userFound?._id.toString() === _id || userFound === null) {
-            const updatedUser = await User.findByIdAndUpdate(_id, user, {new: true});
-            res.status(200).json(updatedUser);
-        } 
-        else {
-            res.status(409).json({ message: "Username already exist" });
-        }
-
     } catch (error) {
         res.status(409).json({ message: error.message });
     }

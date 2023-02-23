@@ -14,7 +14,7 @@ const EditProfile = ({ show, handleclose }) => {
     formState: { errors },
   } = useForm();
 
-  const user = useSelector((state) => state.user.user.userFound);
+  const user = useSelector((state) => state.user.userProfile);
 
   const isPending = useSelector((state) => state.user.isPending);
 

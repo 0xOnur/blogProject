@@ -79,7 +79,6 @@ export const updateUser = createAsyncThunk(
             const config = {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
-                    id: `${id}`
                 },
             };
 
@@ -107,7 +106,6 @@ export const followUser = async ({id, currentUserId}) => {
         const config = {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
-                id: `${id}`
             },
         };
 
@@ -122,10 +120,10 @@ export const followUser = async ({id, currentUserId}) => {
 
 export const unFollowUser = async ({id, currentUserId}) => {
     try {
+        
         const config = {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
-                id: `${id}`
             },
         };
 
