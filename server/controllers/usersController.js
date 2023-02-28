@@ -37,7 +37,41 @@ export const createUser = async (req, res) => {
         quality: "auto:eco",
     };
 
+    const checkIfUsernameExists = async (username) => {
+        const user = await User.findOne({ username: username });
+        return user;
+    };
+    
+    const checkIfEmailExists = async (email) => {
+        const user = await User.findOne({ email: email });
+        return user;
+    };
+
     try {
+        const emailRegex = /^\S+@\S+\.\S+$/;
+        const validEmailFormat = emailRegex.test(req.body.email);
+      
+        if (!validEmailFormat) {
+          return res.status(400).json({ message: "Invalid email format" });
+        }
+
+        req.body.username = req.body.username.replace(/\s/g, '');
+
+
+        const existingUsername = await checkIfUsernameExists(req.body.username);
+        if (existingUsername) {
+            return res.status(409).json({ message: "Username already exists" });
+        }
+
+        const existingEmail = await checkIfEmailExists(req.body.email);
+        if (existingEmail) {
+            return res.status(409).json({ message: "Email already exists" });
+        }
+
+        if (req.body.password.length < 6) {
+            return res.status(409).json({ message: "Password must be at least 6 characters" });
+        }
+        
         const user = new User({
             username: req.body.username,
             email: req.body.email,
@@ -54,19 +88,13 @@ export const createUser = async (req, res) => {
         await user.save();
         const userFound = user;
         const token = generateToken(userFound._id.toString());
-        console.log(userFound, token);
         res.status(201).json({
             userFound,
             token: token
         });
 
     } catch (error) {
-        if (error instanceof mongoose.Error.ValidationError) {
-            const messages = Object.values(error.errors).map(val => val.message);
-            res.status(400).send(messages);
-        } else {
-            res.status(500).send(error);
-        }
+        res.status(409).json({ message: error.message });
     }
   };
 
@@ -217,6 +245,7 @@ export const updateUser = async (req, res) => {
     
     try {
         const {id: _id} = req.params;
+        req.body.username = req.body.username.replace(/\s/g, '');
 
         if(userId === _id) {
             const user = {

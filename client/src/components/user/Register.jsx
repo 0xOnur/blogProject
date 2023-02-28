@@ -97,32 +97,12 @@ const Register = () => {
                     <Button type="submit" variant="primary">Register</Button>
 
                     {/* This area check errors for Modal */}
-                    {user?.error?.keyValue?.email && 
+                    {user?.error?.message && 
                       <UserModal
                         show={modalShow}
                         onHide={() => setModalShow(false)}
                         title="Hata"
-                        body={user.error.keyValue.email + " already exist"}
-                        description="Please try another email."
-                      />
-                    }
-                    {user?.error?.keyValue?.username && 
-                      <UserModal
-                        show={modalShow}
-                        onHide={() => setModalShow(false)}
-                        title="Hata"
-                        body={user.error.keyValue.username + " already exist"}
-                        description="Please try another username."
-                      />
-                    }
-
-                    {!user?.error?.keyValue && 
-                      <UserModal
-                        show={modalShow}
-                        onHide={() => setModalShow(false)}
-                        title="Hata"
-                        body={user.error}
-                        description=""
+                        body={user?.error?.message}
                       />
                     }
 

@@ -28,7 +28,7 @@ export const getSinglePost = async (req, res) => {
 
 export const createPost = async (req, res) => {
     const options = {
-        folder: "Blofigy/posts",
+        folder: "Blogify/posts",
         allowed_formats: ["jpg", "png", "jpeg"],
         quality: "auto:eco",
     };
@@ -127,20 +127,31 @@ export const updatePost = async (req, res) => {
 }
 
 export const deletePost = async (req, res) => {
+
     try {
+
         const token  = req.headers.authorization.split(" ")[1];
         const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decodedToken._id;
 
-        const postCreatorId = await Post.findById(_id).select('creator');
+        const postId = req.params.id;
+
+        const postCreatorId = await Post.findById(postId).select('creator');
 
         if(userId === postCreatorId.creator.toString()){
-            const {id : _id} = req.params;
 
-            const deletedPost = await Post.findByIdAndDelete(_id);
+            //this area removes the image from cloudinary
+            const oldPost = await Post.findById(postId);
+            const oldImageId = oldPost.imageId;
+
+            cloudinary.uploader.destroy(oldImageId, {invalidate: true}, (error, result) => {
+                console.log(result, error);
+            });
+
+            const deletedPost = await Post.findByIdAndDelete(postId);
             //this area removes the post id from the user's posts array
             const user = await User.findById(deletedPost.creator);
-            user.posts = user.posts.filter(post => post.toString() !== _id);
+            user.posts = user.posts.filter(post => post.toString() !== postId);
             await user.save();
 
             res.status(200).json(deletedPost);
