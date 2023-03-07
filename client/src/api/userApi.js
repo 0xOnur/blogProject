@@ -1,8 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import jwt_decode from "jwt-decode";
 
-const userEndpoint = "http://localhost:5000/users/";
+const userEndpoint = "http://192.168.10.107:5000/users/";
 
 export const loginUser = createAsyncThunk(
     "loginUser",
@@ -10,7 +9,8 @@ export const loginUser = createAsyncThunk(
         try {
             const response = await axios.post(`${userEndpoint}login`, userData);
             const data = response.data;
-            localStorage.setItem('token', data.token);
+            localStorage.setItem('accessToken', data.accessToken);
+            localStorage.setItem('refreshToken', data.refreshToken);
             return data;
         } catch (error) {
             return rejectWithValue(error.response.data);
@@ -18,13 +18,26 @@ export const loginUser = createAsyncThunk(
     }
 );
 
+export const tokenIsExpired = createAsyncThunk(
+    'tokenIsExpired',
+    async(refreshToken, {rejectWithValue}) => {
+    if(refreshToken) {
+        try {
+            const response = await axios.post(`${userEndpoint}token`, {refreshToken});
+            const data = response.data;
+            return data;
+        }catch(error) {
+            return rejectWithValue(error.response.data);
+        }
+    } 
+});
+
 export const fetchSingleUser = createAsyncThunk(
     "fetchSingleUser",
     async (id) => {
         const response = await axios.get(`${userEndpoint}${id}`);
         const userFound = response.data;
-        const token = localStorage.getItem('token');
-        return { userFound, token };
+        return userFound;
     }
 );
 
@@ -42,7 +55,8 @@ export const fetchUserPosts = createAsyncThunk(
 export const logoutUser = createAsyncThunk(
     "logoutUser",
     async () => {
-        localStorage.removeItem('token');
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
         return [];
     }
 );
@@ -64,7 +78,8 @@ export const createUser = createAsyncThunk(
         try {
             const response = await axios.post(`${userEndpoint}register`, userData);
             const data = response.data;
-            localStorage.setItem('token', data.token);
+            localStorage.setItem('accessToken', data.accessToken);
+            localStorage.setItem('refreshToken', data.refreshToken);
             return data;
         } catch (error) {
             return rejectWithValue(error.response.data);
@@ -78,14 +93,13 @@ export const updateUser = createAsyncThunk(
         try {
             const config = {
                 headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
                 },
             };
 
             const response = await axios.put(`${userEndpoint}${id}`, userData, config);
-            const userFound = response.data;
-            const token = localStorage.getItem('token');
-            return { userFound, token };
+            const data = response.data;
+            return data;
         }catch (error){
             return rejectWithValue(error.response.data);
         }
@@ -105,7 +119,7 @@ export const followUser = async ({id, currentUserId}) => {
     try {
         const config = {
             headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             },
         };
 
@@ -123,7 +137,7 @@ export const unFollowUser = async ({id, currentUserId}) => {
         
         const config = {
             headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             },
         };
 
@@ -156,11 +170,3 @@ export const getFollowing = async (id) => {
 }
 
 
-export const tokenIsExpired = async(token) => {
-    if(token) {
-        const decodedToken = jwt_decode(token);
-        const currentTime = Date.now() / 1000;
-        const isExpired = decodedToken.exp.toString() < currentTime.toString().split(".")[0];
-        return isExpired || false;
-    }
-}

@@ -4,22 +4,11 @@ import {useSelector} from 'react-redux';
 import Post from './Post';
 import { Row, Col, Container } from 'react-bootstrap';
 import {fetchPosts} from '../api/postsApi';
-import {tokenIsExpired, logoutUser} from '../api/userApi';
+
 
 const PostList = () => {
 
   const dispatch = useDispatch();
-
-  const token = useSelector((state) => state?.user?.user?.token);
-
-  
-  useEffect(() => {
-    //if tokenExpired return true logout
-    tokenIsExpired(token).then((res) => {
-      res === true && dispatch(logoutUser());
-    })
-  }, [dispatch, token])
-
 
   useEffect(() => {
     dispatch(fetchPosts());

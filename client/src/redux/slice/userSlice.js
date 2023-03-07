@@ -2,7 +2,10 @@ import {createSlice} from '@reduxjs/toolkit';
 import * as api from '../../api/userApi';
 
 const initialState = {
-    user: [],
+    user: [
+    ],
+    accessToken: null,
+    refreshToken: null,
     //there is any user profile
     userProfile: null,
     //
@@ -20,8 +23,20 @@ export const userSlice = createSlice({
             state.error = null;
             state.user = [];
         },
+        [api.tokenIsExpired.pending]: (state, action) => {
+            state.error = null;
+        },
+        [api.tokenIsExpired.fulfilled]: (state, action) => {
+            state.user.accessToken = action.payload.accessToken;
+            state.user.refreshToken = action.payload.refreshToken;
+        },
+        [api.tokenIsExpired.rejected]: (state, action) => {
+            state.user = [];
+        },
         [api.loginUser.fulfilled]: (state, action) => {
-            state.user = action.payload;
+            state.user = action.payload.userFound;
+            state.accessToken = action.payload.accessToken;
+            state.refreshToken = action.payload.refreshToken;
         },
         [api.loginUser.rejected]: (state, action) => {
             state.error = action.payload;
@@ -34,6 +49,8 @@ export const userSlice = createSlice({
         },
         [api.logoutUser.fulfilled]: (state, action) => {
             state.user = action.payload;
+            state.accessToken = null;
+            state.refreshToken = null;
         },
         [api.logoutUser.rejected]: (state, action) => {
             state.error = action.payload;
@@ -51,7 +68,9 @@ export const userSlice = createSlice({
             state.error = null;
         },
         [api.createUser.fulfilled]: (state, action) => {
-            state.user = action.payload;
+            state.user = action.payload.userFound;
+            state.accessToken = action.payload.accessToken;
+            state.refreshToken = action.payload.refreshToken;
         },
         [api.updateUser.fulfilled]: (state, action) => {
             state.user = action.payload;

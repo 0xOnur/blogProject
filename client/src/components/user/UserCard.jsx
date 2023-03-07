@@ -22,7 +22,7 @@ const UserCard = React.memo(({user, currentUser, handleFollow, handleUnFollow}) 
       </Row>
       <Row className="justify-content-center mb-3">
         <Col md="12" className="text-center">
-        {currentUser && (
+        {currentUser._id && (
           <>
             {currentUser._id === user._id ? (
               <>

@@ -46,6 +46,7 @@ export const createPost = async (req, res) => {
                 content: req.body.content,
                 creator: req.body.creator,
                 image: null,
+                imageId: null,
             });
     
             await newPost.validate();
@@ -53,6 +54,7 @@ export const createPost = async (req, res) => {
             if(req.file) {
                 const result = await cloudinary.v2.uploader.upload(req.file.path, options);
                 newPost.image = result.secure_url;
+                newPost.imageId = result.public_id;
             }
     
             await newPost.save();
@@ -108,10 +110,10 @@ export const updatePost = async (req, res) => {
                 //this area removes the old image from cloudinary
                 const oldPost = await Post.findById(_id);
                 const oldImageId = oldPost.imageId;
-
-                cloudinary.uploader.destroy(oldImageId, {invalidate: true}, (error, result) => {
-                    console.log(result, error);
-                });
+                if(oldImageId) {
+                    cloudinary.uploader.destroy(oldImageId, {invalidate: true});
+                }
+                
             }
 
             const updatedPost = await Post.findByIdAndUpdate(_id, newPost, {new: true});
@@ -144,9 +146,7 @@ export const deletePost = async (req, res) => {
             const oldPost = await Post.findById(postId);
             const oldImageId = oldPost.imageId;
 
-            cloudinary.uploader.destroy(oldImageId, {invalidate: true}, (error, result) => {
-                console.log(result, error);
-            });
+            cloudinary.uploader.destroy(oldImageId, {invalidate: true});
 
             const deletedPost = await Post.findByIdAndDelete(postId);
             //this area removes the post id from the user's posts array

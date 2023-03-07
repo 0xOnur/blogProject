@@ -22,7 +22,7 @@ const AddPostForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const userId = useSelector((state) => state.user.user?.userFound?._id);
+  const userId = useSelector((state) => state.user.user?._id);
 
   !userId && (
     setTimeout(() => {
@@ -32,6 +32,7 @@ const AddPostForm = () => {
 
 
   const error = useSelector((state) => state.post.error);
+  const isPending = useSelector((state) => state.post.isPending)
 
   const [modalShow, setModalShow] = useState(false);
 
@@ -118,6 +119,17 @@ const AddPostForm = () => {
               description="Redirecting to post.."
             />
           )}
+          {
+            isPending && (
+              <PostsModal
+                show={isPending}
+                onHide={() => setModalShow(false)}
+                title="Loading"
+                body="Please wait.."
+                description="Post is creating.."
+              />
+            )
+          }
         </Form>
     </Container>
     </>    

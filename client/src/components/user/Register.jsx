@@ -20,7 +20,7 @@ const Register = () => {
   console.log(user?.error)
 
   useEffect(() => {
-    if (user?.user.userFound) {
+    if (user?.user._id) {
       navigate("/");
     }
   }, [navigate]);
@@ -111,7 +111,7 @@ const Register = () => {
                         show={modalShow}
                         onHide={() => setModalShow(false)}
                         title="Success"
-                        body={"Welcome " + user?.user?.userFound?.username}
+                        body={"Welcome " + user?.user?.username}
                         description="Redirecting to home page..."
                       />
                     }

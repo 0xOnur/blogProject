@@ -15,7 +15,7 @@ const Logout = () => {
     const [modalShow, setModalShow] = useState(false);
 
     useEffect(() => {
-        if (user.userFound) {
+        if (user._id) {
             dispatch(logoutUser()).then(() => {
                 setModalShow(true);
                 setTimeout(() => {
@@ -29,7 +29,7 @@ const Logout = () => {
     
     return (
         <div>
-            {!user?.userFound && (
+            {!user?._id && (
                 <UserModal
                     show={modalShow}
                     title={"Success"}

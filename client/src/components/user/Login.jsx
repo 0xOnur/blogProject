@@ -16,7 +16,7 @@ const Login = () => {
 
 
   useEffect(() => {
-    if (user?.user.userFound) {
+    if (user?.user._id) {
       navigate("/");
     }
   }, [navigate]);
@@ -87,10 +87,10 @@ const Login = () => {
                   />}
                 </Form.Group>
             </Col>
-            {user.user.userFound ?( <UserModal
+            {user.user._id ?( <UserModal
                     show={modalShow}
                     title={"Success"}
-                    body={"Hello " + user.user.userFound.username}
+                    body={"Hello " + user.user.username}
                     description={"You are logged in"}
                     onHide={() => setModalShow(false)}
                   />): (<></>)}

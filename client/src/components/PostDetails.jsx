@@ -43,7 +43,7 @@ const PostDetails = () => {
       }else {
         //this area getUserById dispatch for update user's posts in redux store
         setShow(true);
-        dispatch(fetchSingleUser(currentUser.userFound._id));
+        dispatch(fetchSingleUser(currentUser._id));
         setTimeout(() => {
           navigate("/");
         }, 1000);
@@ -117,7 +117,7 @@ const PostDetails = () => {
                   <h3>{currentPost?.title}</h3>
                   <h5>{currentPost?.subTitle}</h5>
                 </Col>
-                {currentUser?.userFound?._id === currentPost?.creator?._id && (
+                {currentUser?._id === currentPost?.creator?._id && (
                   <>
                     <Col md="12 mb-3">
                       <Button

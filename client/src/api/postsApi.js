@@ -1,6 +1,6 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import axios from 'axios';
-const postsEndpoint = "http://localhost:5000/posts/";
+const postsEndpoint = "http://192.168.10.107:5000/posts/";
 
 export const fetchPosts = createAsyncThunk(
     'fetchPost',
@@ -17,7 +17,7 @@ export const createPost = createAsyncThunk(
         try {
             const config = {
                 headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
                 },
             };
             const response = await axios.post(`${postsEndpoint}`, postData, config);
@@ -35,7 +35,7 @@ export const updatePost = createAsyncThunk(
         try {
             const config = {
                 headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
                 },
             };
             const response = await axios.put(`${postsEndpoint}${id}`, formData, config);
@@ -53,7 +53,7 @@ export const deletePost = createAsyncThunk(
         try {
             const config = {
                 headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
                 },
             };
             const response = await axios.delete(`${postsEndpoint}${id}`, config);

@@ -38,11 +38,11 @@ function NAV() {
               
               {/* this area username link and dropdown menu for logout and profile page link */}
               <Col md={1}>
-                  {user?.userFound && (
+                  {user?._id && (
                     <>
-                      <Image src={user.userFound.image} width={50} height={50} roundedCircle />
-                      <NavDropdown title={user.userFound.username} id="basic-nav-dropdown">
-                        <NavDropdown.Item href={"/users/"+user.userFound._id}>
+                      <Image src={user.image} width={50} height={50} roundedCircle />
+                      <NavDropdown title={user.username} id="basic-nav-dropdown">
+                        <NavDropdown.Item href={"/users/"+user._id}>
                           Profile
                         </NavDropdown.Item>
                         <NavDropdown.Item href="/logout">
@@ -73,7 +73,7 @@ function NAV() {
                           <Nav.Link href="/">
                             <MdHomeFilled /> Home
                           </Nav.Link>
-                          {user?.userFound ? (
+                          {user?._id ? (
                               <Nav.Link href="/posts/add">
                                 <MdOutlinePostAdd /> New Post
                               </Nav.Link>

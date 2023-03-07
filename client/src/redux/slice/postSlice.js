@@ -26,12 +26,15 @@ export const postSlice = createSlice({
             state.error = action.payload;
         },
         [api.createPost.rejected]: (state, action) => {
+            state.isPending = false;
             state.error = action.payload;
         },
         [api.createPost.pending]: (state, action) => {
+            state.isPending = true;
             state.error = null;
         },
         [api.createPost.fulfilled]: (state, action) => {
+            state.isPending = false;
             state.posts.push(action.payload);
         },
         [api.updatePost.fulfilled]: (state, action) => {

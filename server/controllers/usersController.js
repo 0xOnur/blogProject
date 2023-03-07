@@ -2,13 +2,19 @@ import User from  "../models/usersModel.js";
 import Post from  "../models/postsModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import mongoose from "mongoose";
 import cloudinary from "cloudinary";
+import {generateToken, updateToken } from "./jwtControl.js";
 
 export const getUsers = async (req, res) => {
     try {
         const users = await User.find();
-        res.status(200).json(users);
+        const newData = users.map((user) => {
+            const data = Object.assign({}, user);
+            delete data._doc.password;
+            delete data._doc.email;
+            return data._doc;
+        });
+        res.status(200).json(newData);
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
@@ -86,11 +92,15 @@ export const createUser = async (req, res) => {
         }
 
         await user.save();
+
         const userFound = user;
-        const token = generateToken(userFound._id.toString());
-        res.status(201).json({
-            userFound,
-            token: token
+        const userId = userFound._id;
+        const tokens = generateToken({"_id": userId});
+
+        res.status(200).json({
+            userFound: userFound,
+            accessToken: tokens.accessToken,
+            refreshToken: tokens.refreshToken
         });
 
     } catch (error) {
@@ -102,13 +112,18 @@ export const loginUser = async (req, res) => {
     const user = req.body;
     try {
         const userFound = await User.findOne({ email: user.email });
+
         if (userFound) {
             const isPasswordCorrect = await bcrypt.compare(user.password, userFound.password);
             if (isPasswordCorrect) {
-                const token = generateToken(userFound._id);
+                const userFoundJson = userFound.toJSON();
+                delete userFoundJson.password;
+                const userId = userFoundJson._id;
+                const tokens = generateToken({"_id": userId});
                 res.status(200).json({
-                    userFound,
-                    token: token
+                    userFound: userFoundJson,
+                    accessToken: tokens.accessToken,
+                    refreshToken: tokens.refreshToken
                 });
             } else {
                 res.status(404).json({ message: "Wrong password" });
@@ -122,6 +137,23 @@ export const loginUser = async (req, res) => {
         res.status(409).json({ message: error.message });
     }
 }
+
+export const tokenIsExpired = async (req, res) => {
+    try {
+        const refreshToken = req.body.refreshToken;
+        const result = await updateToken(refreshToken);
+        if(result.accessToken && result.refreshToken) {
+            res.status(200).json(result);
+        }else {
+            res.status(401).json({ message: "Unauthorized" });
+        }
+
+    }catch (error) {
+        res.status(409).json({ message: error.message });
+    }
+}
+        
+
 
 export const fetchSingleUser = async (req, res) => {
     try {
@@ -296,12 +328,3 @@ export const deleteUser = async (req, res) => {
         res.status(409).json({ message: error.message });
     }
 }
-
-const generateToken = (userId) => {
-    return jwt.sign(
-        { _id: userId }, 
-        process.env.JWT_SECRET, 
-        { expiresIn: "1d" }
-    );
-}
-    

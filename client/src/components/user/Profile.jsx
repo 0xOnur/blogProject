@@ -16,7 +16,7 @@ const Profile = () => {
 
   const [posts, setPosts] = useState(null);
 
-  const currentUser = useSelector((state) => state?.user?.user?.userFound);
+  const currentUser = useSelector((state) => state?.user?.user);
   
   const currentUserId = currentUser?._id;
 
@@ -32,7 +32,7 @@ const Profile = () => {
   }, [dispatch, id, currentUser]);
 
   const handleFollow = () => {
-    followUser({id: id, currentUserId}).then((response) => {
+    followUser({id: id, currentUserId}).then(() => {
       dispatch(getUserById(id)).then((user) => {
         setUser(user.payload);
       });
@@ -40,7 +40,7 @@ const Profile = () => {
   }
 
   const handleUnFollow = () => {
-    unFollowUser({id: id, currentUserId}).then((response) => {
+    unFollowUser({id: id, currentUserId}).then(() => {
       dispatch(getUserById(id)).then((user) => {
       setUser(user.payload);
       });

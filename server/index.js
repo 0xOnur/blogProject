@@ -17,7 +17,7 @@ cloudinary.config({
 const app = express();
 
 
-app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+app.use(cors({ credentials: true, origin: "http://192.168.10.107:3000" }));
 
 app.use(express.json());
 

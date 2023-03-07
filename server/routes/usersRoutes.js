@@ -10,10 +10,11 @@ import { getUsers,
     getUserById, 
     loginUser, 
     deleteUser, 
-    updateUser 
+    updateUser ,
+    tokenIsExpired
 } from "../controllers/usersController.js";
-
 import  authMiddleware from "../middlewares/authMiddleware.js";
+
 
 const userRoutes = express.Router();
 
@@ -21,6 +22,8 @@ const upload = multer({storage: multer.diskStorage({})});
 
 //https://localhost:5000/users
 userRoutes.route('/login').post(loginUser);
+
+userRoutes.post('/token', tokenIsExpired);
 
 
 userRoutes.get("/", getUsers);
