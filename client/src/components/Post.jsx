@@ -28,10 +28,8 @@ const Post = React.memo(({post}) => {
             <Card.Text>#{post.tag}</Card.Text>
             <Card.Title>{post.title}</Card.Title>
          
-            <Card.Text>
-              {post.content?.substring(0,150)+'...'}
-            </Card.Text>
-            <Button variant="primary"><Link style={{color:"white", textDecoration:"none"}} to={`/posts/${post._id}`}>More..</Link></Button>
+            
+            <Button variant="primary"><Link style={{color:"white", textDecoration:"none"}} to={`/posts/${post._id}`}>More</Link></Button>
           </Card.Body>
         </Card>
     </>

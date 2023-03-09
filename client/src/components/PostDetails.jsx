@@ -70,6 +70,7 @@ const PostDetails = () => {
           background-color: transparent;
         }
         .post-content {
+          color: black;
           margin-top: 1rem;
           margin-bottom: 3rem;
           border: 1px solid #dee2e6;
@@ -84,9 +85,6 @@ const PostDetails = () => {
           border-radius: 0.5rem;
           margin-bottom: 2rem;
           margin-top: 2rem;
-        }
-        p{
-          align: justify;
         }
       `}
       </style>
@@ -168,7 +166,7 @@ const PostDetails = () => {
                     src={currentPost?.image || noImage}
                     alt=""
                   />
-                  <p>{currentPost?.content}</p>
+                  <div dangerouslySetInnerHTML={{ __html: currentPost?.content }} />
                 </Col>
               </Row>
             </div>
